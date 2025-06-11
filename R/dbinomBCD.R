@@ -10,7 +10,7 @@
 #' @param p2 base success probability for \eqn{ Y }, in \eqn{(0, 1)}
 #' @param lambda dependence parameter, must be positive.
 #'
-#' @return The probability \eqn{ P(X = x, Y = y) }.
+#' @return The probability \eqn{ P(X = x, Y = y)}.
 #'
 #' @details
 #' The joint p.m.f. of the BBCD is

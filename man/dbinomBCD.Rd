@@ -22,7 +22,7 @@ dbinomBCD(x, y, n1, n2, p1, p2, lambda)
 \item{lambda}{dependence parameter, must be positive.}
 }
 \value{
-The probability \eqn{ P(X = x, Y = y) }.
+The probability \eqn{ P(X = x, Y = y)}.
 }
 \description{
 Computes the probability mass function (p.m.f.) of the bivariate binomial conditionals distribution (BBCD) as defined by Ghosh, Marques, and Chakraborty (2025). The distribution is characterized by conditional binomial distributions for \eqn{ X } and \eqn{ Y }.
