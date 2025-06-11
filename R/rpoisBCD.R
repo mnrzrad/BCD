@@ -1,0 +1,52 @@
+#' Random Sampling from a Bivariate Poisson Distribution via Conditional Specification
+#'
+#' Generates random samples from a bivariate Poisson distribution (BPD).
+#'
+#' @param n number of samples to generate
+#' @param lambda1 rate parameter for \eqn{ X } that must be positive
+#' @param lambda2 rate parameter for \eqn{ Y } that must be positive
+#' @param lambda3 dependence parameter that must be (0, 1]
+#' @param seed seed for random number generation (default = 123)
+#'
+#' @return A data frame with columns `X` and `Y`, containing the sampled values.
+#' @examples
+#' samples <- rpoisBCD(n = 100, lambda1 = 0.5, lambda2 = 0.5, lambda3 = 0.5)
+#' cor(samples$X, samples$Y) # Should be negative
+#'
+#' @importFrom stats rpois dpois
+#' @export
+rpoisBCD <- function(n, lambda1, lambda2, lambda3, seed = 123) {
+  set.seed(seed)
+
+  if (!is.numeric(n) || length(n) != 1 || n <= 0 || n != round(n)) {
+    stop("n must be a positive integer.")
+  }
+  if (!is.numeric(lambda1) || length(lambda1) != 1 || lambda1 <= 0) {
+    stop("lambda1 must be a positive numeric scalar.")
+  }
+  if (!is.numeric(lambda2) || length(lambda2) != 1 || lambda2 <= 0) {
+    stop("lambda2 must be a positive numeric scalar.")
+  }
+  if (!is.numeric(lambda3) || length(lambda3) != 1 || lambda3 <= 0 || lambda3 > 1) {
+    stop("lambda3 must be a numeric scalar in (0, 1].")
+  }
+
+  K <- normalize_constant_BPCD(lambda1, lambda2, lambda3)
+  samples <- matrix(NA, nrow = n, ncol = 2)
+  count <- 0
+
+  while (count < n) {
+    x <- rpois(1, lambda1)
+    y <- rpois(1, lambda2)
+    u <- runif(1)
+    p <- dpoisBCD(x, y, lambda1, lambda2, lambda3)
+    g <- dpois(x, lambda1) * dpois(y, lambda2)
+    M <- K / (lambda1 * lambda2)
+    if (g > 0 && u < p / (M * g)) {
+      count <- count + 1
+      samples[count, ] <- c(x, y)
+    }
+  }
+
+  return(data.frame(X = samples[, 1], Y = samples[, 2]))
+}
