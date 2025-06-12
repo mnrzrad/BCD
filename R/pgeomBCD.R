@@ -12,7 +12,7 @@
 #' @return The probability \eqn{ P(X \leq x, Y \leq y) }.
 #'
 #' @examples
-#' # Compute P(X ≤ 1, Y ≤ 2) with q1 = 0.5, q2 = 0.6, q3 = 0.8
+#' # Compute P(X \le 1, Y \le 2) with q1 = 0.5, q2 = 0.6, q3 = 0.8
 #' pgeomBCD(x = 1, y = 2, q1 = 0.5, q2 = 0.6, q3 = 0.8)
 #'
 #' # Example with small values

@@ -13,7 +13,7 @@
 #' @return The probability \eqn{ P(X \leq x, Y \leq y) }.
 #'
 #' @examples
-#' # Compute P(X ≤ 2, Y ≤ 1) with n1 = 5, n2 = 5, p1 = 0.5, p2 = 0.4, lambda = 0.5
+#' # Compute P(X \le 2, Y \le 1) with n1 = 5, n2 = 5, p1 = 0.5, p2 = 0.4, lambda = 0.5
 #' pbinomBCD(x = 2, y = 5, n1 = 5, n2 = 5, p1 = 0.5, p2 = 0.4, lambda = 0.5)
 #'
 #' # Example with independence (lambda = 1)

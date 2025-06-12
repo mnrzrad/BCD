@@ -20,15 +20,10 @@
 #'   \item{\code{convergence}}{Convergence status from the optimizer (0 means successful).}
 #' }
 #' @examples
-#' data <- rbinomBCD(n = 50,n1 = 5, n2 = 3, p1 = 0.6, p2 = 0.4, lambda = 1.2)
+#' data <- rbinomBCD(n = 10,n1 = 5, n2 = 3, p1 = 0.6, p2 = 0.4, lambda = 1.2)
 #' MLEbinomBCD(data)
 #' MLEbinomBCD(data, fixed_n1 = 5, fixed_n2 = 3)
 #'
-#' data(shacc)
-#' MLEbinomBCD(shacc, fixed_n1 = 33, fixed_n2 = 27)
-#'
-#' data(seedplant)
-#' MLEbinomBCD(seedplant, fixed_n1 = 13, fixed_n2 = 11)
 #' @importFrom stats cor optim
 #' @export
 MLEbinomBCD <- function(data,

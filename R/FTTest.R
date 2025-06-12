@@ -27,24 +27,18 @@
 #' and \eqn{c} is the number of columns in the contingency table.
 #'
 #' @examples
-#' samples <- rbinomBCD(n = 50, n1 = 5, n2 = 2, p1 = 0.15, p2 = 0.9, lambda = 1, seed = 1)
-#'params1 <- MLEbinomBCD(samples, fixed_n1 = 5, fixed_n2 = 2)
-#'result_bbcd1 <- FTtest(samples, "BBCD", params1, num_params = 3)
-#'result_bbcd1
 #'
-#'params2 <- MLEbinomBCD(samples)
-#'result_bbcd2 <- FTtest(samples, "BBCD", params2, num_params = 5)
-#'result_bbcd2
-#'
-#'samples <- rgeomBCD(n = 50, q1 = 0.5, q2 = 0.5, q3 = 0.1, seed = 123)
+#'samples <- rgeomBCD(n = 20, q1 = 0.5, q2 = 0.5, q3 = 0.1, seed = 123)
 #'params <- MLEgeomBCD(samples)
 #'result_bgcd <- FTtest(samples, "BGCD", params, num_params = 3)
 #'result_bgcd
 #'
-#'samples <- rpoisBCD(n = 50, lambda1 = 0.5, lambda2 = 0.5, lambda3 = 0.5, seed = 8)
+#'samples <- rpoisBCD(20, lambda1=.5, lambda2=.5, lambda3=.5)
 #'params <- MLEpoisBCD(samples)
 #'result_bpcd <- FTtest(samples, "BPCD", params, num_params = 3)
 #'result_bpcd
+#'
+#'
 #'
 #'@importFrom stats pchisq
 #'@export

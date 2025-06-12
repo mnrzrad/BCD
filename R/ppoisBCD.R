@@ -11,7 +11,7 @@
 #' @return The probability \eqn{ P(X \leq x, Y \leq y) }.
 #'
 #' @examples
-#' # Compute P(X ≤ 1, Y ≤ 1) with lambda1 = 0.5, lambda2 = 0.5, lambda3 = 0.5
+#' # Compute P(X \le 1, Y \le 1) with lambda1 = 0.5, lambda2 = 0.5, lambda3 = 0.5
 #' ppoisBCD(x = 1, y = 1, lambda1 = 0.5, lambda2 = 0.5, lambda3 = 0.5)
 #'
 #' # Example with larger values

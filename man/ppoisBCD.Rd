@@ -24,7 +24,7 @@ The probability \eqn{ P(X \leq x, Y \leq y) }.
 Computes the cumulative distribution function (c.d.f.) of a bivariate Poisson distribution (BPD) with conditional specification, as described by Ghosh, Marques, and Chakraborty (2021).
 }
 \examples{
-# Compute P(X ≤ 1, Y ≤ 1) with lambda1 = 0.5, lambda2 = 0.5, lambda3 = 0.5
+# Compute P(X \le 1, Y \le 1) with lambda1 = 0.5, lambda2 = 0.5, lambda3 = 0.5
 ppoisBCD(x = 1, y = 1, lambda1 = 0.5, lambda2 = 0.5, lambda3 = 0.5)
 
 # Example with larger values
