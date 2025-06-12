@@ -22,6 +22,9 @@
 #' @details
 #' Data source: English Premier League match results from \url{https://football-data.co.uk/} (formerly hosted on datahub.io).
 #'
+#' @references
+#' Ghosh, I., Marques, F., & Chakraborty, S. (2021). A new bivariate Poisson distribution via conditional specification: properties and applications. \emph{Journal of Applied Statistics}, 48(16), 3025-3047. \doi{10.1080/02664763.2020.1793307}
+#'
 #' @usage data(eplSeasonGoals)
 #'
 #' @keywords datasets

@@ -1,7 +1,8 @@
-#' Freeman–Tukey  Test for Bivariate Distributions via Conditional Specification
+#' Freeman–Tukey Test for Bivariate Distributions via Conditional Specification
 #'
 #' Performs a goodness-of-fit test using the Freeman–Tukey (F–T) statistic
-#' for a given dataset and a specified bivariate distribution.
+#' for a given dataset and a specified bivariate distribution via Conditional
+#' Specification.
 #'
 #' @param data a dataset or matrix with two columns.
 #' @param distribution a string specifying the theoretical distribution (`"BBCD"`, `"BBPD"`, or `"BBGD"`).
@@ -14,6 +15,16 @@
 #'   \item{expected}{Expected frequency table under the specified distribution}
 #'   \item{test}{Result of the Freeman–Tukey test, a list with test statistic and p-value}
 #' }
+#'
+#' @details
+#' The Freeman–Tukey (F–T) statistic is used to assess the goodness of fit in
+#' contingency tables. It is defined as:
+#' \deqn{T^2 = 4 \sum_{i=1}^{r} \sum_{j=1}^{c} \left( \sqrt{O_{ij}} - \sqrt{E_{ij}} \right)^2}
+#' where \eqn{O_{ij}} and \eqn{E_{ij}} are the observed and expected frequencies, respectively.
+#'
+#' The statistic \eqn{T^2} asymptotically follows a chi-squared distribution with
+#' \eqn{(r \cdot c - 1)} degrees of freedom, where \eqn{r} is the number of rows
+#' and \eqn{c} is the number of columns in the contingency table.
 #'
 #' @examples
 #' samples <- rbinomBCD(n = 50, n1 = 5, n2 = 2, p1 = 0.15, p2 = 0.9, lambda = 1, seed = 1)

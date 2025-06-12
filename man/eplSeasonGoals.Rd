@@ -36,4 +36,7 @@ data(eplSeasonGoals)
 head(eplSeasonGoals[["1415"]])
 head(eplSeasonGoals[["2425"]])
 }
+\references{
+Ghosh, I., Marques, F., & Chakraborty, S. (2021). A new bivariate Poisson distribution via conditional specification: properties and applications. \emph{Journal of Applied Statistics}, 48(16), 3025-3047. \doi{10.1080/02664763.2020.1793307}
+}
 \keyword{datasets}
