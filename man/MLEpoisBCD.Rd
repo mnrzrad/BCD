@@ -40,6 +40,11 @@ data <- rpoisBCD(n = 50, lambda1 = 3, lambda2 = 5, lambda3 = 1)
 result <- MLEpoisBCD(data)
 print(result)
 
+data(eplSeasonGoals)
+MLEpoisBCD(eplSeasonGoals[["1819"]])
+
+data(lensfaults)
+MLEpoisBCD(lensfaults)
 }
 \seealso{
 \code{\link{dpoisBCD}} \code{\link{ppoisBCD}} \code{\link{rpoisBCD}}

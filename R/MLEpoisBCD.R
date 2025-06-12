@@ -30,6 +30,11 @@
 #' result <- MLEpoisBCD(data)
 #' print(result)
 #'
+#' data(eplSeasonGoals)
+#' MLEpoisBCD(eplSeasonGoals[["1819"]])
+#'
+#' data(lensfaults)
+#' MLEpoisBCD(lensfaults)
 #' @seealso \code{\link{dpoisBCD}} \code{\link{ppoisBCD}} \code{\link{rpoisBCD}}
 #' @importFrom stats cor optim
 #' @export

@@ -37,8 +37,10 @@ where \eqn{ K(q_1, q_2, q_3) } is the normalizing constant.
 samples <- rgeomBCD(n = 50, q1 = 0.2, q2 = 0.2, q3 = 0.5)
 result <-MLEgeomBCD(samples)
 print(result)
-
 # For better estimation accuracy and stability, consider increasing the sample size (n = 1000)
+
+data(abortflights)
+MLEgeomBCD(abortflights)
 
 }
 \references{

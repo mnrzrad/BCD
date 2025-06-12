@@ -27,8 +27,10 @@
 #' samples <- rgeomBCD(n = 50, q1 = 0.2, q2 = 0.2, q3 = 0.5)
 #' result <-MLEgeomBCD(samples)
 #' print(result)
-#'
 #' # For better estimation accuracy and stability, consider increasing the sample size (n = 1000)
+#'
+#' data(abortflights)
+#' MLEgeomBCD(abortflights)
 #'
 #' @references
 #' Ghosh, I., Marques, F., & Chakraborty, S.  (2023) A bivariate geometric distribution via conditional specification: properties and applications, Communications in Statistics - Simulation and Computation, 52:12, 5925--5945, \doi{10.1080/03610918.2021.2004419}
