@@ -1,4 +1,4 @@
-# TestIndVars <img src="man/figures/logo.png" align="right" width="25%"/>
+# BCD <img src="man/figures/logo.png" align="right" width="25%"/>
 
 [![R-CMD-check](https://github.com/mnrzrad/BCD/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mnrzrad/BCD/actions/workflows/R-CMD-check.yaml)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/BCD)](https://cran.r-project.org/package=BCD)
