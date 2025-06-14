@@ -13,9 +13,10 @@ MLEbinomBCD(data, fixed_n1 = NULL, fixed_n2 = NULL, verbose = TRUE)
 
 \item{fixed_n2}{known value of `n2` (NULL to estimate)}
 
-\item{verbose}{logical; print progress
-
-#' @return A list of class \code{"MLEpoisBCD"} containing:
+\item{verbose}{logical; print progress}
+}
+\value{
+A list of class \code{"MLEpoisBCD"} containing:
 \describe{
   \item{\code{n1}}{estimated n1}
   \item{\code{n2}}{estimated n2}
@@ -26,7 +27,7 @@ MLEbinomBCD(data, fixed_n1 = NULL, fixed_n2 = NULL, verbose = TRUE)
   \item{\code{AIC}}{Akaike Information Criterion.}
   \item{\code{BIC}}{Bayesian Information Criterion.}
   \item{\code{convergence}}{Convergence status from the optimizer (0 means successful).}
-}}
+}
 }
 \description{
 Estimates the parameters of a Bivariate Binomial Conditionals via Conditional Specification using maximum likelihood.
