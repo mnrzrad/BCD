@@ -1,0 +1,143 @@
+MLEbinomBCD <- function(data,
+                        fixed_n1 = NULL,
+                        fixed_n2 = NULL,
+                        verbose = TRUE) {
+  if (is.data.frame(data)) {
+    X <- data[[1]]
+    Y <- data[[2]]
+  } else {
+    X <- data[, 1]
+    Y <- data[, 2]
+  }
+  
+  maxX <- max(X)
+  maxY <- max(Y)
+  default_range_n1 <- 5
+  default_range_n2 <- 5
+  
+  
+  
+  estimate_n1 <- is.null(fixed_n1)
+  estimate_n2 <- is.null(fixed_n2)
+  n1 <- if (!estimate_n1) fixed_n1 else maxX
+  n2 <- if (!estimate_n2) fixed_n2 else maxY
+  
+  compute_loglik <- function(n1, n2, p1, p2, lambda) {
+    if (n1 < maxX || n2 < maxY || p1 <= 0 || p1 >= 1 || p2 <= 0 || p2 >= 1 || lambda <= 0) return(-Inf)
+    total_loglik <- 0
+    for (i in seq_along(X)) {
+      if (X[i] > n1 || Y[i] > n2) return(-Inf)
+      prob <- tryCatch(dbinomBCD(X[i], Y[i], n1, n2, p1, p2, lambda), error = function(e) NA)
+      if (is.na(prob) || prob <= 0) return(-Inf)
+      total_loglik <- total_loglik + log(prob)
+    }
+    if (!is.finite(total_loglik)) return(-Inf)
+    return(total_loglik)
+  }
+  
+  n1_candidates <- if (estimate_n1) maxX:(maxX + range_n1) else fixed_n1
+  n2_candidates <- if (estimate_n2) maxY:(maxY + range_n2) else fixed_n2
+  
+  best_loglik <- -Inf
+  best_params <- NULL
+  
+  if (verbose) {
+    message("Starting MLE estimation for BBCD...")
+    if (estimate_n1) message("Estimating n1 (grid search from ", min(n1_candidates), " to ", max(n1_candidates), ")")
+    if (estimate_n2) message("Estimating n2 (grid search from ", min(n2_candidates), " to ", max(n2_candidates), ")")
+  }
+  
+  total_combinations <- length(n1_candidates) * length(n2_candidates)
+  current_comb <- 0
+  
+  for (n1_val in n1_candidates) {
+    for (n2_val in n2_candidates) {
+      current_comb <- current_comb + 1
+      if (verbose && current_comb %% 2 == 0) {
+        message(sprintf("Trying combination %d/%d: n1=%d, n2=%d", current_comb, total_combinations, n1_val, n2_val))
+      }
+      
+      if (max(X) > n1_val || max(Y) > n2_val) next
+      
+      p1_init <- max(0.01, min(0.99, mean(X) / n1_val))
+      p2_init <- max(0.01, min(0.99, mean(Y) / n2_val))
+      
+      sample_cor <- cor(X, Y)
+      lambda_candidates <- if (sample_cor > 0.1) c(1.5, 2.0, 1.2) else if (sample_cor < -0.1) c(0.5, 0.8, 0.3) else c(1.0, 0.8, 1.2)
+      
+      best_local_loglik <- -Inf
+      best_local_params <- NULL
+      
+      for (lambda_init in lambda_candidates) {
+        initial_params <- c(p1_init, p2_init, lambda_init)
+        opt_fn <- function(params) -compute_loglik(n1_val, n2_val, params[1], params[2], params[3])
+        opt_result <- tryCatch(optim(par = initial_params, fn = opt_fn,
+                                     method = "L-BFGS-B",
+                                     lower = c(0.001, 0.001, 0.001),
+                                     upper = c(0.999, 0.999, 10),
+                                     control = list(maxit = 500, factr = 1e12)),
+                               error = function(e) list(par = initial_params, value = Inf, convergence = 1))
+        
+        # Retry if lambda hits upper bound
+        if (opt_result$convergence == 0 && abs(opt_result$par[3] - 10.0) < 0.01) {
+          opt_result2 <- tryCatch(optim(par = initial_params, fn = opt_fn,
+                                        method = "L-BFGS-B",
+                                        lower = c(0.001, 0.001, 0.001),
+                                        upper = c(0.999, 0.999, 50),
+                                        control = list(maxit = 500, factr = 1e12)),
+                                  error = function(e) opt_result)
+          if (opt_result2$convergence == 0 && opt_result2$value < opt_result$value &&
+              abs(opt_result2$par[3] - 50.0) > 0.01) {
+            opt_result <- opt_result2
+          }
+        }
+        
+        if (opt_result$convergence == 0 && is.finite(opt_result$value)) {
+          current_loglik <- -opt_result$value
+          if (current_loglik > best_local_loglik) {
+            best_local_loglik <- current_loglik
+            best_local_params <- opt_result$par
+          }
+        }
+      }
+      
+      if (!is.null(best_local_params) && best_local_loglik > best_loglik) {
+        best_loglik <- best_local_loglik
+        best_params <- list(n1 = n1_val, n2 = n2_val,
+                            p1 = best_local_params[1],
+                            p2 = best_local_params[2],
+                            lambda = best_local_params[3])
+        if (verbose) {
+          message(sprintf("Improved fit: n1=%d, n2=%d, p1=%.4f, p2=%.4f, lambda=%.4f, logLik=%.2f",
+                          n1_val, n2_val, best_params$p1, best_params$p2, best_params$lambda, best_loglik))
+        }
+      }
+    }
+  }
+  
+  if (is.null(best_params)) stop("Failed to find valid parameter estimates. Try different initial values or fix n1 and n2.")
+  if (best_params$lambda > 5) {
+    warning("Lambda estimate is quite large (", round(best_params$lambda, 4), "). Consider reviewing model assumptions or data.")
+  }
+  
+  k <- 3 + estimate_n1 + estimate_n2
+  n <- length(X)
+  aic <- -2 * best_loglik + 2 * k
+  bic <- -2 * best_loglik + k * log(n)
+  
+  result <- list(
+    n1 = best_params$n1,
+    n2 = best_params$n2,
+    p1 = best_params$p1,
+    p2 = best_params$p2,
+    lambda = best_params$lambda,
+    logLik = best_loglik,
+    AIC = aic,
+    BIC = bic,
+    n_params = k,
+    n_obs = n
+  )
+  
+  class(result) <- "MLEbinomBCD"
+  return(result)
+}

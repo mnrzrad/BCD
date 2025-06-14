@@ -1,0 +1,299 @@
+# Diagnostic tools for BBCD MLE issues
+
+# 1. Check if your data actually follows the BBCD distribution
+check_data_properties <- function(data, true_params = NULL) {
+  if (is.data.frame(data)) {
+    X <- data[[1]]
+    Y <- data[[2]]
+  } else {
+    X <- data[, 1]
+    Y <- data[, 2]
+  }
+  
+  cat("=== DATA PROPERTIES ===\n")
+  cat("Sample size:", length(X), "\n")
+  cat("X range:", min(X), "to", max(X), "\n")
+  cat("Y range:", min(Y), "to", max(Y), "\n")
+  cat("Mean X:", round(mean(X), 4), "\n")
+  cat("Mean Y:", round(mean(Y), 4), "\n")
+  cat("Sample correlation:", round(cor(X, Y), 4), "\n")
+  
+  # Check the joint frequency table
+  cat("\n=== JOINT FREQUENCY TABLE ===\n")
+  joint_table <- table(X, Y)
+  print(joint_table)
+  
+  if (!is.null(true_params)) {
+    cat("\n=== COMPARISON WITH TRUE PARAMETERS ===\n")
+    cat("True n1:", true_params$n1, "vs Max X:", max(X), "\n")
+    cat("True n2:", true_params$n2, "vs Max Y:", max(Y), "\n")
+    cat("True p1:", true_params$p1, "vs Sample p1:", round(mean(X)/max(X), 4), "\n")
+    cat("True p2:", true_params$p2, "vs Sample p2:", round(mean(Y)/max(Y), 4), "\n")
+    cat("True lambda:", true_params$lambda, "\n")
+    
+    # Expected correlation under BBCD
+    expected_cor_sign <- if(true_params$lambda > 1) "positive" else if(true_params$lambda < 1) "negative" else "zero"
+    actual_cor_sign <- if(cor(X, Y) > 0.05) "positive" else if(cor(X, Y) < -0.05) "negative" else "near zero"
+    cat("Expected correlation sign:", expected_cor_sign, "\n")
+    cat("Actual correlation sign:", actual_cor_sign, "\n")
+    
+    if (expected_cor_sign != actual_cor_sign) {
+      cat("WARNING: Correlation sign mismatch!\n")
+    }
+  }
+  
+  return(list(
+    joint_table = joint_table,
+    correlation = cor(X, Y),
+    means = c(mean(X), mean(Y))
+  ))
+}
+
+# 2. Test the likelihood function directly
+test_likelihood_function <- function(data, n1, n2, p1, p2, lambda_range = seq(0.1, 5, by = 0.1)) {
+  if (is.data.frame(data)) {
+    X <- data[[1]]
+    Y <- data[[2]]
+  } else {
+    X <- data[, 1]
+    Y <- data[, 2]
+  }
+  
+  cat("=== TESTING LIKELIHOOD FUNCTION ===\n")
+  cat("Testing lambda values from", min(lambda_range), "to", max(lambda_range), "\n")
+  
+  loglik_values <- numeric(length(lambda_range))
+  
+  for (i in seq_along(lambda_range)) {
+    lambda <- lambda_range[i]
+    total_loglik <- 0
+    
+    # Compute log-likelihood
+    for (j in seq_along(X)) {
+      tryCatch({
+        prob <- dbinomBCD(X[j], Y[j], n1, n2, p1, p2, lambda)
+        if (prob > 0) {
+          total_loglik <- total_loglik + log(prob)
+        } else {
+          total_loglik <- -Inf
+          break
+        }
+      }, error = function(e) {
+        total_loglik <<- -Inf
+      })
+    }
+    
+    loglik_values[i] <- total_loglik
+  }
+  
+  # Find the maximum
+  if (any(is.finite(loglik_values))) {
+    max_idx <- which.max(loglik_values)
+    best_lambda <- lambda_range[max_idx]
+    best_loglik <- loglik_values[max_idx]
+    
+    cat("Best lambda in range:", best_lambda, "\n")
+    cat("Best log-likelihood:", best_loglik, "\n")
+    
+    # Plot if possible
+    plot(lambda_range, loglik_values, type = "l", 
+         xlab = "Lambda", ylab = "Log-likelihood",
+         main = "Log-likelihood vs Lambda")
+    abline(v = best_lambda, col = "red", lty = 2)
+    
+    return(list(
+      lambda_range = lambda_range,
+      loglik_values = loglik_values,
+      best_lambda = best_lambda,
+      best_loglik = best_loglik
+    ))
+  } else {
+    cat("ERROR: All likelihood values are -Inf or NaN\n")
+    return(NULL)
+  }
+}
+
+# 3. Check normalization constant computation
+test_normalization_constant <- function(n1, n2, p1, p2, lambda_range = c(0.5, 1.0, 1.5, 2.0, 5.0, 10.0)) {
+  cat("=== TESTING NORMALIZATION CONSTANT ===\n")
+  
+  for (lambda in lambda_range) {
+    tryCatch({
+      # Test your normalize_constant_BBCD function
+      norm_const <- normalize_constant_BBCD(n1, n2, p1, p2, lambda)
+      cat(sprintf("Lambda = %.1f: Normalization constant = %.6f\n", lambda, norm_const))
+      
+      # Check if it's reasonable
+      if (is.na(norm_const) || norm_const <= 0 || !is.finite(norm_const)) {
+        cat("  WARNING: Invalid normalization constant!\n")
+      }
+    }, error = function(e) {
+      cat(sprintf("Lambda = %.1f: ERROR - %s\n", lambda, e$message))
+    })
+  }
+}
+
+# 4. Alternative MLE with profile likelihood for lambda
+profile_likelihood_lambda <- function(data, n1, n2, lambda_range = seq(0.1, 5, by = 0.05)) {
+  if (is.data.frame(data)) {
+    X <- data[[1]]
+    Y <- data[[2]]
+  } else {
+    X <- data[, 1]
+    Y <- data[, 2]
+  }
+  
+  cat("=== PROFILE LIKELIHOOD FOR LAMBDA ===\n")
+  
+  profile_results <- data.frame(
+    lambda = lambda_range,
+    loglik = NA,
+    p1_opt = NA,
+    p2_opt = NA
+  )
+  
+  for (i in seq_along(lambda_range)) {
+    lambda <- lambda_range[i]
+    
+    # For fixed lambda, optimize over p1 and p2
+    opt_fn <- function(params) {
+      p1 <- params[1]
+      p2 <- params[2]
+      
+      if (p1 <= 0 || p1 >= 1 || p2 <= 0 || p2 >= 1) {
+        return(Inf)
+      }
+      
+      total_loglik <- 0
+      for (j in seq_along(X)) {
+        tryCatch({
+          prob <- dbinomBCD(X[j], Y[j], n1, n2, p1, p2, lambda)
+          if (prob > 0) {
+            total_loglik <- total_loglik + log(prob)
+          } else {
+            return(Inf)
+          }
+        }, error = function(e) {
+          return(Inf)
+        })
+      }
+      
+      return(-total_loglik)
+    }
+    
+    # Optimize p1 and p2
+    initial_p1 <- mean(X) / n1
+    initial_p2 <- mean(Y) / n2
+    initial_p1 <- max(0.01, min(0.99, initial_p1))
+    initial_p2 <- max(0.01, min(0.99, initial_p2))
+    
+    opt_result <- tryCatch({
+      optim(par = c(initial_p1, initial_p2),
+            fn = opt_fn,
+            method = "L-BFGS-B",
+            lower = c(0.001, 0.001),
+            upper = c(0.999, 0.999))
+    }, error = function(e) {
+      list(par = c(initial_p1, initial_p2), value = Inf, convergence = 1)
+    })
+    
+    if (opt_result$convergence == 0 && is.finite(opt_result$value)) {
+      profile_results$loglik[i] <- -opt_result$value
+      profile_results$p1_opt[i] <- opt_result$par[1]
+      profile_results$p2_opt[i] <- opt_result$par[2]
+    }
+  }
+  
+  # Find the best lambda
+  valid_results <- profile_results[is.finite(profile_results$loglik), ]
+  if (nrow(valid_results) > 0) {
+    best_idx <- which.max(valid_results$loglik)
+    best_result <- valid_results[best_idx, ]
+    
+    cat("Best lambda:", best_result$lambda, "\n")
+    cat("Best p1:", round(best_result$p1_opt, 4), "\n")
+    cat("Best p2:", round(best_result$p2_opt, 4), "\n")
+    cat("Best log-likelihood:", round(best_result$loglik, 4), "\n")
+    
+    # Plot profile likelihood
+    plot(valid_results$lambda, valid_results$loglik, type = "l",
+         xlab = "Lambda", ylab = "Profile Log-likelihood",
+         main = "Profile Likelihood for Lambda")
+    abline(v = best_result$lambda, col = "red", lty = 2)
+    
+    return(best_result)
+  } else {
+    cat("ERROR: No valid results found\n")
+    return(NULL)
+  }
+}
+
+# 5. Main diagnostic function
+diagnose_bbcd_mle <- function(data, true_params = NULL) {
+  cat("========================================\n")
+  cat("BBCD MLE DIAGNOSTIC REPORT\n")
+  cat("========================================\n\n")
+  
+  # Step 1: Check data properties
+  data_props <- check_data_properties(data, true_params)
+  
+  cat("\n========================================\n\n")
+  
+  # Step 2: Test normalization constant
+  if (!is.null(true_params)) {
+    test_normalization_constant(true_params$n1, true_params$n2, true_params$p1, true_params$p2)
+  } else {
+    # Use sample-based estimates
+    if (is.data.frame(data)) {
+      X <- data[[1]]
+      Y <- data[[2]]
+    } else {
+      X <- data[, 1]
+      Y <- data[, 2]
+    }
+    n1_est <- max(X) + 1
+    n2_est <- max(Y) + 1
+    p1_est <- mean(X) / n1_est
+    p2_est <- mean(Y) / n2_est
+    test_normalization_constant(n1_est, n2_est, p1_est, p2_est)
+  }
+  
+  cat("\n========================================\n\n")
+  
+  # Step 3: Profile likelihood
+  if (is.data.frame(data)) {
+    X <- data[[1]]
+    Y <- data[[2]]
+  } else {
+    X <- data[, 1]
+    Y <- data[, 2]
+  }
+  n1_use <- max(X)
+  n2_use <- max(Y)
+  
+  cat("Using n1 =", n1_use, "and n2 =", n2_use, "for profile likelihood\n\n")
+  profile_result <- profile_likelihood_lambda(data, n1_use, n2_use)
+  
+  return(list(
+    data_properties = data_props,
+    profile_result = profile_result
+  ))
+}
+
+# Usage example:
+cat("To diagnose your MLE issues, run:\n")
+cat("\n# Generate your data\n")
+cat("true_params <- list(n1 = 5, n2 = 3, p1 = 0.6, p2 = 0.4, lambda = 1.2)\n")
+cat("data <- rbinomBCD(n = 100, n1 = true_params$n1, n2 = true_params$n2,\n")
+cat("                  p1 = true_params$p1, p2 = true_params$p2, lambda = true_params$lambda)\n")
+cat("\n# Run diagnostics\n")
+cat("diagnosis <- diagnose_bbcd_mle(data, true_params)\n")
+
+
+# First, check what's happening with your data
+true_params <- list(n1 = 5, n2 = 3, p1 = 0.6, p2 = 0.4, lambda = 1.2)
+data <- rbinomBCD(n = 100, n1 = true_params$n1, n2 = true_params$n2, 
+                  p1 = true_params$p1, p2 = true_params$p2, lambda = true_params$lambda)
+
+# Run the full diagnostic
+diagnosis <- diagnose_bbcd_mle(data, true_params)

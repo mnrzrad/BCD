@@ -1,0 +1,22 @@
+#' Aborted Flight Counts for 109 Aircrafts
+#'
+#' This dataset records the number of aborted flights by 109 aircrafts during two consecutive periods.
+#' The counts are cross-tabulated by the number of aborted flights in each period.
+#'
+#' @format A data frame with 109 rows and 2 variables:
+#' \describe{
+#'   \item{X}{Number of aborted flights in Period 1.}
+#'   \item{Y}{Number of aborted flights in Period 2.}
+#' }
+#'
+#'
+#' @references
+#' Barbiero, A. (2019). A bivariate geometric distribution allowing for positive or negative correlation. \emph{Communications in Statistics - Theory and Methods}, 48 (11), 2842–-2861. \doi{10.1080/03610926.2018.1473428}.
+#'
+#' Ghosh, I., Marques, F., & Chakraborty, S.  (2023) A bivariate geometric distribution via conditional specification: properties and applications, Communications in Statistics - Simulation and Computation, 52:12, 5925--5945, \doi{10.1080/03610918.2021.2004419}
+#'
+#' @examples
+#' data(abortflights)
+#' head(abortflights)
+#' table(abortflights$X, abortflights$Y)
+"abortflights"

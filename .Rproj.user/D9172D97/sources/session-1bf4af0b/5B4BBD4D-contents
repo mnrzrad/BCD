@@ -1,0 +1,52 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Build & check artifacts
+.Rcheck/
+*.o
+*.so
+*.dll
+*.exe
+*.out
+*.log
+
+# Python-related (if using reticulate)
+__pycache__/
+*.py[cod]
+
+# R package and environment files
+.Rpackrat/
+renv/library/
+renv/staging/
+
+# Knitr and RMarkdown cache
+*_cache/
+*cache*/
+
+# Output files from knitting
+*.utf8.md
+*.knit.md
+*.pdf
+*.docx
+*.html
+
+# IDE files
+*.Rproj
+
+# Personal / sensitive files
+data_private/
+secret/
+notes_dev/
+*.csv
+*.rda
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Temporary
+*.tmp
+*.swp
+~$*
