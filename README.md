@@ -34,15 +34,17 @@ remotes::install_github("mnrzrad/BCD")
 
 ## To cite package `BCD` in publications use:
 
-Marques, F. J., Norouzirad, M., Diogo, J., Bispo, R. (2024) *BCD:
-Testing the Independence of Variables for Specific Covariance Structures*. R package version 0.1.0,
-<https://cran.r-project.org/package=TestIndVars>.
+Norouzirad, M., Marques, F. J., Ghosh, I. (2025) *BCD: Bivariate Distributions via Conditional Specification*. R package version 0.1.0,
+<https://cran.r-project.org/package=BCD>.
 
 A BibTeX entry for LaTeX users is
 
-@Manual{TestIndVars, title = {TestIndVars: Testing the Independence of Variables for Specific Covariance Structures},
-author = {Filipe J. Marques and Mina Norouzirad and Joana Diogo and Regina Bispo}, year = {2024}, note = {R package version 0.1.0}, url =
-{<https://cran.r-project.org/package=TestIndVars>} }
+@Manual{BCD, 
+title = {BCD: Bivariate Distributions via Conditional Specification},
+author = {Mina Norouzirad and Filipe J. Marques and Indranil Shosh},
+year = {2025}, 
+note = {R package version 0.1.0},
+url = {<https://cran.r-project.org/package=BCD>} }
 
 ## License
 
