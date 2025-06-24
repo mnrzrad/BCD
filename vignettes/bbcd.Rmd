@@ -1,0 +1,114 @@
+---
+title: "The Bivariate Binomial Conditionals Distribution (BBCD)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The Bivariate Binomial Conditionals Distribution (BBCD)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(BCD)
+```
+
+# Introduction
+
+This vignette introduces the Bivariate Binomial Conditionals Distribution (BBCD), defined via conditional specifications, as proposed by Ghosh, Marques, and Chakraborty (2025). The `BCD` package provides functions to evaluate the joint and cumulative distributions, perform random sampling, and estimate parameters via maximum likelihood.
+
+# Joint Probability: `dbinomBCD()`
+
+The joint probability mass function (p.m.f.) of the BBCD is given by:
+
+\[
+P(X = x, Y = y) = K \cdot \binom{n_1}{x} \binom{n_2}{y} p_1^x (1 - p_1)^{n_1 - x} p_2^y (1 - p_2)^{n_2 - y} \lambda^{xy},
+\]
+
+where \( K \) is a normalizing constant ensuring the probabilities sum to 1.
+
+## Example
+
+```{r}
+dbinomBCD(x = 2, y = 1, n1 = 5, n2 = 5, p1 = 0.5, p2 = 0.4, lambda = 0.5)
+# independence case
+dbinomBCD(x = 2, y = 1, n1 = 5, n2 = 5, p1 = 0.5, p2 = 0.4, lambda = 1.0) 
+```
+
+# Cumulative Distribution: `pbinomBCD()`
+
+The function `pbinomBCD()` computes the cumulative distribution:
+
+\[
+P(X \leq x, Y \leq y)
+\]
+
+## Example
+
+```{r}
+pbinomBCD(x = 2, y = 5, n1 = 5, n2 = 5, p1 = 0.5, p2 = 0.4, lambda = 0.5)
+pbinomBCD(x = 1, y = 1, n1 = 10, n2 = 10, p1 = 0.3, p2 = 0.6, lambda = 1)
+```
+
+# Random Sampling: `rbinomBCD()`
+
+Generate samples from the BBCD using:
+
+```r
+rbinomBCD(n, n1, n2, p1, p2, lambda)
+```
+
+## Example
+
+```{r}
+set.seed(123)
+samples <- rbinomBCD(n = 100, n1 = 10, n2 = 10, p1 = 0.5, p2 = 0.4, lambda = 1.2)
+head(samples)
+```
+
+# Maximum Likelihood Estimation: `MLEbinomBCD()`
+
+Estimate the parameters of the distribution from data.
+
+## Example
+
+```{r}
+data <- rbinomBCD(n = 100, n1 = 6, n2 = 4, p1 = 0.6, p2 = 0.3, lambda = 1.5)
+fit <- MLEbinomBCD(data)
+fit
+```
+
+You may also fix known values for `n1` and `n2`:
+
+```{r}
+MLEbinomBCD(data, fixed_n1 = 6, fixed_n2 = 4)
+```
+
+# Real Data Example 
+The dataset `shacc` is related to accident records for 122 experienced railway shunters across two historical periods.
+```{r}
+data(shacc)
+head(shacc)
+plot(shacc$X, shacc$Y, xlab = "Accidents 1937–42", ylab = "Accidents 1943–47")
+```
+
+```{r}
+fit <- MLEbinomBCD(shacc, fixed_n1 = 33, fixed_n2 = 27)
+FTtest(shacc, "BBCD", params = fit, num_params = 3)
+```
+The dataset `seedplant` records the number of seeds sown and the number of resulting plants grown over plots of fixed area (5 square feet).
+```{r}
+data(seedplant)
+head(seedplant)
+plot(seedplant$X, seedplant$Y, xlab = "Seeds Sown", ylab = "Plants Grown")
+```
+
+```{r}
+EstParams <- MLEbinomBCD(shacc, fixed_n1 = 13, fixed_n2 = 11)
+FTtest(shacc, "BBCD", params = EstParams, num_params = 3)
+```
+
+**Reference:**
+Ghosh, I., Marques, F., & Chakraborty, S. (2025). *A form of bivariate binomial conditionals distributions*. Communications in Statistics - Theory and Methods, 54(2), 534–553.

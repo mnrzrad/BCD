@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>The Bivariate Binomial Conditionals Distribution (BBCD)</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">The Bivariate Binomial Conditionals
+Distribution (BBCD)</h1>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This vignette introduces the Bivariate Binomial Conditionals
+Distribution (BBCD), defined via conditional specifications, as proposed
+by Ghosh, Marques, and Chakraborty (2025). The <code>BCD</code> package
+provides functions to evaluate the joint and cumulative distributions,
+perform random sampling, and estimate parameters via maximum
+likelihood.</p>
+</div>
+<div id="joint-probability-dbinombcd" class="section level1">
+<h1>Joint Probability: <code>dbinomBCD()</code></h1>
+<p>The joint probability mass function (p.m.f.) of the BBCD is given
+by:</p>
+<p><span class="math display">\[
+P(X = x, Y = y) = K \cdot \binom{n_1}{x} \binom{n_2}{y} p_1^x (1 -
+p_1)^{n_1 - x} p_2^y (1 - p_2)^{n_2 - y} \lambda^{xy},
+\]</span></p>
+<p>where <span class="math inline">\(K\)</span> is a normalizing
+constant ensuring the probabilities sum to 1.</p>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">dbinomBCD</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">n1 =</span> <span class="dv">5</span>, <span class="at">n2 =</span> <span class="dv">5</span>, <span class="at">p1 =</span> <span class="fl">0.5</span>, <span class="at">p2 =</span> <span class="fl">0.4</span>, <span class="at">lambda =</span> <span class="fl">0.5</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; [1] 0.1072416</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co"># independence case</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">dbinomBCD</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">n1 =</span> <span class="dv">5</span>, <span class="at">n2 =</span> <span class="dv">5</span>, <span class="at">p1 =</span> <span class="fl">0.5</span>, <span class="at">p2 =</span> <span class="fl">0.4</span>, <span class="at">lambda =</span> <span class="fl">1.0</span>) </span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; [1] 0.081</span></span></code></pre></div>
+</div>
+</div>
+<div id="cumulative-distribution-pbinombcd" class="section level1">
+<h1>Cumulative Distribution: <code>pbinomBCD()</code></h1>
+<p>The function <code>pbinomBCD()</code> computes the cumulative
+distribution:</p>
+<p><span class="math display">\[
+P(X \leq x, Y \leq y)
+\]</span></p>
+<div id="example-1" class="section level2">
+<h2>Example</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">pbinomBCD</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">y =</span> <span class="dv">5</span>, <span class="at">n1 =</span> <span class="dv">5</span>, <span class="at">n2 =</span> <span class="dv">5</span>, <span class="at">p1 =</span> <span class="fl">0.5</span>, <span class="at">p2 =</span> <span class="fl">0.4</span>, <span class="at">lambda =</span> <span class="fl">0.5</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; [1] 0.7147949</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">pbinomBCD</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">n1 =</span> <span class="dv">10</span>, <span class="at">n2 =</span> <span class="dv">10</span>, <span class="at">p1 =</span> <span class="fl">0.3</span>, <span class="at">p2 =</span> <span class="fl">0.6</span>, <span class="at">lambda =</span> <span class="dv">1</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; [1] 0.0002504978</span></span></code></pre></div>
+</div>
+</div>
+<div id="random-sampling-rbinombcd" class="section level1">
+<h1>Random Sampling: <code>rbinomBCD()</code></h1>
+<p>Generate samples from the BBCD using:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">rbinomBCD</span>(n, n1, n2, p1, p2, lambda)</span></code></pre></div>
+<div id="example-2" class="section level2">
+<h2>Example</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">rbinomBCD</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">n1 =</span> <span class="dv">10</span>, <span class="at">n2 =</span> <span class="dv">10</span>, <span class="at">p1 =</span> <span class="fl">0.5</span>, <span class="at">p2 =</span> <span class="fl">0.4</span>, <span class="at">lambda =</span> <span class="fl">1.2</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; Starting to generate 100 samples with parameters:</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; n1 = 10, n2 = 10, p1 = 0.5000, p2 = 0.4000, lambda = 1.2000</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; </span><span class="al">WARNING</span><span class="co">: For lambda &gt; 1, sampling may take significantly longer due</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;           to the nature of the distribution.</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; Please be patient as the simulation runs...</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; 10/100 samples (10.0%) | Attempts: 10 | Time: 0.0 sec20/100 samples (20.0%) | Attempts: 20 | Time: 0.0 sec30/100 samples (30.0%) | Attempts: 31 | Time: 0.0 sec40/100 samples (40.0%) | Attempts: 42 | Time: 0.0 sec50/100 samples (50.0%) | Attempts: 52 | Time: 0.0 sec60/100 samples (60.0%) | Attempts: 62 | Time: 0.0 sec70/100 samples (70.0%) | Attempts: 72 | Time: 0.0 sec80/100 samples (80.0%) | Attempts: 82 | Time: 0.0 sec90/100 samples (90.0%) | Attempts: 93 | Time: 0.0 sec100/100 samples (100.0%) | Attempts: 107 | Time: 0.0 sec</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; Sampling completed:</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; Total samples: 100</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; Total attempts: 107</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; Total time: 0.01 seconds</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; Sample correlation: -0.0369 (negative)</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; Note: Sample correlation sign (negative) differs from theoretical expectation (positive) for lambda = 1.20</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; This might be due to small sample size. Try increasing n.</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; Alternatively, verify that dbinomBCD and normalize_constant_BBCD are correctly implemented.</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="fu">head</span>(samples)</span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt;   X Y</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; 1 4 5</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; 2 7 6</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; 3 5 6</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; 4 5 7</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt; 5 6 4</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt; 6 7 3</span></span></code></pre></div>
+</div>
+</div>
+<div id="maximum-likelihood-estimation-mlebinombcd" class="section level1">
+<h1>Maximum Likelihood Estimation: <code>MLEbinomBCD()</code></h1>
+<p>Estimate the parameters of the distribution from data.</p>
+<div id="example-3" class="section level2">
+<h2>Example</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">rbinomBCD</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">n1 =</span> <span class="dv">6</span>, <span class="at">n2 =</span> <span class="dv">4</span>, <span class="at">p1 =</span> <span class="fl">0.6</span>, <span class="at">p2 =</span> <span class="fl">0.3</span>, <span class="at">lambda =</span> <span class="fl">1.5</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; Starting to generate 100 samples with parameters:</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; n1 = 6, n2 = 4, p1 = 0.6000, p2 = 0.3000, lambda = 1.5000</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; </span><span class="al">WARNING</span><span class="co">: For lambda &gt; 1, sampling may take significantly longer due</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt;           to the nature of the distribution.</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; Please be patient as the simulation runs...</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; 10/100 samples (10.0%) | Attempts: 15 | Time: 0.0 sec20/100 samples (20.0%) | Attempts: 30 | Time: 0.0 sec30/100 samples (30.0%) | Attempts: 45 | Time: 0.0 sec40/100 samples (40.0%) | Attempts: 60 | Time: 0.0 sec50/100 samples (50.0%) | Attempts: 76 | Time: 0.0 sec60/100 samples (60.0%) | Attempts: 91 | Time: 0.0 sec70/100 samples (70.0%) | Attempts: 107 | Time: 0.0 sec80/100 samples (80.0%) | Attempts: 126 | Time: 0.0 sec90/100 samples (90.0%) | Attempts: 142 | Time: 0.0 sec100/100 samples (100.0%) | Attempts: 157 | Time: 0.0 sec</span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; Sampling completed:</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; Total samples: 100</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; Total attempts: 157</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; Total time: 0.01 seconds</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; Sample correlation: -0.0501 (negative)</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; Note: Sample correlation sign (negative) differs from theoretical expectation (positive) for lambda = 1.50</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; This might be due to small sample size. Try increasing n.</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; Alternatively, verify that dbinomBCD and normalize_constant_BBCD are correctly implemented.</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">MLEbinomBCD</span>(data)</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; Starting MLE estimation for BBCD...</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; Estimating n1 (grid search from6to11)</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; Estimating n2 (grid search from4to9)</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; Improved fit: n1=6, n2=4, p1=0.6005, p2=0.4131, lambda=0.9732, logLik=-271.74</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt;  Trying combination 2/36: n1=6, n2=5</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt;  Trying combination 4/36: n1=6, n2=7</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt;  Trying combination 6/36: n1=6, n2=9</span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt;  Trying combination 8/36: n1=7, n2=5</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt;  Trying combination 10/36: n1=7, n2=7</span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt;  Trying combination 12/36: n1=7, n2=9</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt;  Trying combination 14/36: n1=8, n2=5</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt;  Trying combination 16/36: n1=8, n2=7</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt;  Trying combination 18/36: n1=8, n2=9</span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co">#&gt;  Trying combination 20/36: n1=9, n2=5</span></span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co">#&gt;  Trying combination 22/36: n1=9, n2=7</span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co">#&gt;  Trying combination 24/36: n1=9, n2=9</span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co">#&gt;  Trying combination 26/36: n1=10, n2=5</span></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">#&gt;  Trying combination 28/36: n1=10, n2=7</span></span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co">#&gt;  Trying combination 30/36: n1=10, n2=9</span></span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="co">#&gt;  Trying combination 32/36: n1=11, n2=5</span></span>
+<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="co">#&gt;  Trying combination 34/36: n1=11, n2=7</span></span>
+<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a><span class="co">#&gt;  Trying combination 36/36: n1=11, n2=9</span></span>
+<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a><span class="co">#&gt; Final parameter estimates:</span></span>
+<span id="cb5-45"><a href="#cb5-45" tabindex="-1"></a><span class="co">#&gt; n1 = 6</span></span>
+<span id="cb5-46"><a href="#cb5-46" tabindex="-1"></a><span class="co">#&gt; n2 = 4</span></span>
+<span id="cb5-47"><a href="#cb5-47" tabindex="-1"></a><span class="co">#&gt; p1 = 0.6005</span></span>
+<span id="cb5-48"><a href="#cb5-48" tabindex="-1"></a><span class="co">#&gt; p2 = 0.4131</span></span>
+<span id="cb5-49"><a href="#cb5-49" tabindex="-1"></a><span class="co">#&gt; lambda = 0.9732</span></span>
+<span id="cb5-50"><a href="#cb5-50" tabindex="-1"></a><span class="co">#&gt; Log-likelihood: -271.7432</span></span>
+<span id="cb5-51"><a href="#cb5-51" tabindex="-1"></a><span class="co">#&gt; AIC: 553.4864</span></span>
+<span id="cb5-52"><a href="#cb5-52" tabindex="-1"></a><span class="co">#&gt; BIC: 566.5123</span></span>
+<span id="cb5-53"><a href="#cb5-53" tabindex="-1"></a>fit</span>
+<span id="cb5-54"><a href="#cb5-54" tabindex="-1"></a><span class="co">#&gt; $n1</span></span>
+<span id="cb5-55"><a href="#cb5-55" tabindex="-1"></a><span class="co">#&gt; [1] 6</span></span>
+<span id="cb5-56"><a href="#cb5-56" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-57"><a href="#cb5-57" tabindex="-1"></a><span class="co">#&gt; $n2</span></span>
+<span id="cb5-58"><a href="#cb5-58" tabindex="-1"></a><span class="co">#&gt; [1] 4</span></span>
+<span id="cb5-59"><a href="#cb5-59" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-60"><a href="#cb5-60" tabindex="-1"></a><span class="co">#&gt; $p1</span></span>
+<span id="cb5-61"><a href="#cb5-61" tabindex="-1"></a><span class="co">#&gt; [1] 0.6005103</span></span>
+<span id="cb5-62"><a href="#cb5-62" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-63"><a href="#cb5-63" tabindex="-1"></a><span class="co">#&gt; $p2</span></span>
+<span id="cb5-64"><a href="#cb5-64" tabindex="-1"></a><span class="co">#&gt; [1] 0.4130676</span></span>
+<span id="cb5-65"><a href="#cb5-65" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-66"><a href="#cb5-66" tabindex="-1"></a><span class="co">#&gt; $lambda</span></span>
+<span id="cb5-67"><a href="#cb5-67" tabindex="-1"></a><span class="co">#&gt; [1] 0.9732248</span></span>
+<span id="cb5-68"><a href="#cb5-68" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-69"><a href="#cb5-69" tabindex="-1"></a><span class="co">#&gt; $logLik</span></span>
+<span id="cb5-70"><a href="#cb5-70" tabindex="-1"></a><span class="co">#&gt; [1] -271.7432</span></span>
+<span id="cb5-71"><a href="#cb5-71" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-72"><a href="#cb5-72" tabindex="-1"></a><span class="co">#&gt; $AIC</span></span>
+<span id="cb5-73"><a href="#cb5-73" tabindex="-1"></a><span class="co">#&gt; [1] 553.4864</span></span>
+<span id="cb5-74"><a href="#cb5-74" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-75"><a href="#cb5-75" tabindex="-1"></a><span class="co">#&gt; $BIC</span></span>
+<span id="cb5-76"><a href="#cb5-76" tabindex="-1"></a><span class="co">#&gt; [1] 566.5123</span></span>
+<span id="cb5-77"><a href="#cb5-77" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-78"><a href="#cb5-78" tabindex="-1"></a><span class="co">#&gt; $n_params</span></span>
+<span id="cb5-79"><a href="#cb5-79" tabindex="-1"></a><span class="co">#&gt; [1] 5</span></span>
+<span id="cb5-80"><a href="#cb5-80" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-81"><a href="#cb5-81" tabindex="-1"></a><span class="co">#&gt; $n_obs</span></span>
+<span id="cb5-82"><a href="#cb5-82" tabindex="-1"></a><span class="co">#&gt; [1] 100</span></span></code></pre></div>
+<p>You may also fix known values for <code>n1</code> and
+<code>n2</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">MLEbinomBCD</span>(data, <span class="at">fixed_n1 =</span> <span class="dv">6</span>, <span class="at">fixed_n2 =</span> <span class="dv">4</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt; Starting MLE estimation for BBCD...</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt; Improved fit: n1=6, n2=4, p1=0.6005, p2=0.4131, lambda=0.9732, logLik=-271.74</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; Final parameter estimates:</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; n1 = 6</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt; n2 = 4</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; p1 = 0.6005</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#&gt; p2 = 0.4131</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co">#&gt; lambda = 0.9732</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt; Log-likelihood: -271.7432</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; AIC: 549.4864</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; BIC: 557.3019</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; $n1</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; [1] 6</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; $n2</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; [1] 4</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; $p1</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; [1] 0.6005103</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt; $p2</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt; [1] 0.4130676</span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt; $lambda</span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt; [1] 0.9732248</span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt; $logLik</span></span>
+<span id="cb6-31"><a href="#cb6-31" tabindex="-1"></a><span class="co">#&gt; [1] -271.7432</span></span>
+<span id="cb6-32"><a href="#cb6-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-33"><a href="#cb6-33" tabindex="-1"></a><span class="co">#&gt; $AIC</span></span>
+<span id="cb6-34"><a href="#cb6-34" tabindex="-1"></a><span class="co">#&gt; [1] 549.4864</span></span>
+<span id="cb6-35"><a href="#cb6-35" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-36"><a href="#cb6-36" tabindex="-1"></a><span class="co">#&gt; $BIC</span></span>
+<span id="cb6-37"><a href="#cb6-37" tabindex="-1"></a><span class="co">#&gt; [1] 557.3019</span></span>
+<span id="cb6-38"><a href="#cb6-38" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-39"><a href="#cb6-39" tabindex="-1"></a><span class="co">#&gt; $n_params</span></span>
+<span id="cb6-40"><a href="#cb6-40" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span>
+<span id="cb6-41"><a href="#cb6-41" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-42"><a href="#cb6-42" tabindex="-1"></a><span class="co">#&gt; $n_obs</span></span>
+<span id="cb6-43"><a href="#cb6-43" tabindex="-1"></a><span class="co">#&gt; [1] 100</span></span></code></pre></div>
+</div>
+</div>
+<div id="real-data-example" class="section level1">
+<h1>Real Data Example</h1>
+<p>The dataset <code>shacc</code> is related to accident records for 122
+experienced railway shunters across two historical periods.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">data</span>(shacc)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">head</span>(shacc)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt;   X Y</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; 1 0 0</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt; 2 0 0</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt; 3 0 0</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt; 4 0 0</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt; 5 0 0</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt; 6 0 0</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="fu">plot</span>(shacc<span class="sc">$</span>X, shacc<span class="sc">$</span>Y, <span class="at">xlab =</span> <span class="st">&quot;Accidents 1937–42&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Accidents 1943–47&quot;</span>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">MLEbinomBCD</span>(shacc, <span class="at">fixed_n1 =</span> <span class="dv">33</span>, <span class="at">fixed_n2 =</span> <span class="dv">27</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; Starting MLE estimation for BBCD...</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; Improved fit: n1=33, n2=27, p1=0.0305, p2=0.0264, lambda=1.2492, logLik=-345.47</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; Final parameter estimates:</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; n1 = 33</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; n2 = 27</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; p1 = 0.0305</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt; p2 = 0.0264</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt; lambda = 1.2492</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt; Log-likelihood: -345.4697</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt; AIC: 696.9393</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt; BIC: 705.3514</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="fu">FTtest</span>(shacc, <span class="st">&quot;BBCD&quot;</span>, <span class="at">params =</span> fit, <span class="at">num_params =</span> <span class="dv">3</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; $observed</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt;    0  1 2 3 4 5 6 7</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt; 0 21 13 4 2 0 0 0 0</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt; 1 18 14 5 1 0 0 0 1</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt; 2  8 10 4 3 1 0 0 0</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt; 3  2  1 2 2 1 0 0 0</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#&gt; 4  1  4 1 0 0 0 0 0</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt; 5  0  1 0 1 0 0 0 0</span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt; 6  0  0 1 0 0 0 0 0</span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#&gt; $expected</span></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co">#&gt;             0           1          2          3          4          5</span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt; 0 16.93244413 12.41605364 4.38356144 0.99207845 0.16165809 0.02019554</span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co">#&gt; 1 17.56573745 16.09034862 7.09649839 2.00631059 0.40839904 0.06373498</span></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co">#&gt; 2  8.83525658 10.11005155 5.57015348 1.96723551 0.50023957 0.09752283</span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; 3  2.87006942  4.10262425 2.82364875 1.24576178 0.39572349 0.09637297</span></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt; 4  0.67668486  1.20834497 1.03890301 0.57257776 0.22720948 0.06912338</span></span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="co">#&gt; 5  0.12338071  0.27522436 0.29560112 0.20351699 0.10088527 0.03834083</span></span>
+<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt; 6  0.01810034  0.05043843 0.06767308 0.05820304 0.03604192 0.01711105</span></span>
+<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="co">#&gt;             6            7</span></span>
+<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="co">#&gt; 0 0.002011069 0.0001638508</span></span>
+<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a><span class="co">#&gt; 1 0.007928382 0.0008069398</span></span>
+<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a><span class="co">#&gt; 2 0.015154729 0.0019268144</span></span>
+<span id="cb8-39"><a href="#cb8-39" tabindex="-1"></a><span class="co">#&gt; 3 0.018708210 0.0029713860</span></span>
+<span id="cb8-40"><a href="#cb8-40" tabindex="-1"></a><span class="co">#&gt; 4 0.016762436 0.0033258227</span></span>
+<span id="cb8-41"><a href="#cb8-41" tabindex="-1"></a><span class="co">#&gt; 5 0.011614720 0.0028787626</span></span>
+<span id="cb8-42"><a href="#cb8-42" tabindex="-1"></a><span class="co">#&gt; 6 0.006475289 0.0020048939</span></span>
+<span id="cb8-43"><a href="#cb8-43" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-44"><a href="#cb8-44" tabindex="-1"></a><span class="co">#&gt; $test</span></span>
+<span id="cb8-45"><a href="#cb8-45" tabindex="-1"></a><span class="co">#&gt; $test$statistic</span></span>
+<span id="cb8-46"><a href="#cb8-46" tabindex="-1"></a><span class="co">#&gt; [1] 32.08716</span></span>
+<span id="cb8-47"><a href="#cb8-47" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-48"><a href="#cb8-48" tabindex="-1"></a><span class="co">#&gt; $test$df</span></span>
+<span id="cb8-49"><a href="#cb8-49" tabindex="-1"></a><span class="co">#&gt; [1] 52</span></span>
+<span id="cb8-50"><a href="#cb8-50" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-51"><a href="#cb8-51" tabindex="-1"></a><span class="co">#&gt; $test$p_value</span></span>
+<span id="cb8-52"><a href="#cb8-52" tabindex="-1"></a><span class="co">#&gt; [1] 0.9864757</span></span></code></pre></div>
+<p>The dataset <code>seedplant</code> records the number of seeds sown
+and the number of resulting plants grown over plots of fixed area (5
+square feet).</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">data</span>(seedplant)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="fu">head</span>(seedplant)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt;   X Y</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; 1 0 0</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; 2 0 0</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; 3 0 0</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; 4 0 0</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; 5 0 0</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; 6 0 0</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="fu">plot</span>(seedplant<span class="sc">$</span>X, seedplant<span class="sc">$</span>Y, <span class="at">xlab =</span> <span class="st">&quot;Seeds Sown&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Plants Grown&quot;</span>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>EstParams <span class="ot">&lt;-</span> <span class="fu">MLEbinomBCD</span>(shacc, <span class="at">fixed_n1 =</span> <span class="dv">13</span>, <span class="at">fixed_n2 =</span> <span class="dv">11</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt; Starting MLE estimation for BBCD...</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt; Improved fit: n1=13, n2=11, p1=0.0729, p2=0.0602, lambda=1.3396, logLik=-347.75</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; Final parameter estimates:</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt; n1 = 13</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt; n2 = 11</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; p1 = 0.0729</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; p2 = 0.0602</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt; lambda = 1.3396</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; Log-likelihood: -347.7513</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; AIC: 701.5026</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; BIC: 709.9147</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="fu">FTtest</span>(shacc, <span class="st">&quot;BBCD&quot;</span>, <span class="at">params =</span> EstParams, <span class="at">num_params =</span> <span class="dv">3</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt; $observed</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt;    0  1 2 3 4 5 6 7</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; 0 21 13 4 2 0 0 0 0</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co">#&gt; 1 18 14 5 1 0 0 0 1</span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co">#&gt; 2  8 10 4 3 1 0 0 0</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co">#&gt; 3  2  1 2 2 1 0 0 0</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="co">#&gt; 4  1  4 1 0 0 0 0 0</span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co">#&gt; 5  0  1 0 1 0 0 0 0</span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt; 6  0  0 1 0 0 0 0 0</span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt; $expected</span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt;              0          1          2          3          4           5</span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt; 0 17.284984159 12.1716229 3.89587767 0.74819256 0.09579221 0.008585094</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt; 1 17.665738398 16.6639688 7.14500294 1.83813596 0.31525471 0.037848057</span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; 2  8.333021495 10.5297072 6.04793911 2.08424983 0.47885153 0.077010514</span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co">#&gt; 3  2.402112755  4.0660651 3.12847428 1.44424908 0.44448832 0.095758347</span></span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co">#&gt; 4  0.472120496  1.0705352 1.10338315 0.68234341 0.28131209 0.081184260</span></span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="co">#&gt; 5  0.066810515  0.2029364 0.28018998 0.23211136 0.12818846 0.049556374</span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="co">#&gt; 6  0.007003305  0.0284961 0.05270418 0.05848655 0.04326889 0.022407502</span></span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="co">#&gt;              6            7</span></span>
+<span id="cb10-36"><a href="#cb10-36" tabindex="-1"></a><span class="co">#&gt; 0 0.0005495812 2.512989e-05</span></span>
+<span id="cb10-37"><a href="#cb10-37" tabindex="-1"></a><span class="co">#&gt; 1 0.0032456191 1.988033e-04</span></span>
+<span id="cb10-38"><a href="#cb10-38" tabindex="-1"></a><span class="co">#&gt; 2 0.0088464929 7.258790e-04</span></span>
+<span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="co">#&gt; 3 0.0147355006 1.619665e-03</span></span>
+<span id="cb10-40"><a href="#cb10-40" tabindex="-1"></a><span class="co">#&gt; 4 0.0167350585 2.464079e-03</span></span>
+<span id="cb10-41"><a href="#cb10-41" tabindex="-1"></a><span class="co">#&gt; 5 0.0136842837 2.699085e-03</span></span>
+<span id="cb10-42"><a href="#cb10-42" tabindex="-1"></a><span class="co">#&gt; 6 0.0082886373 2.190003e-03</span></span>
+<span id="cb10-43"><a href="#cb10-43" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-44"><a href="#cb10-44" tabindex="-1"></a><span class="co">#&gt; $test</span></span>
+<span id="cb10-45"><a href="#cb10-45" tabindex="-1"></a><span class="co">#&gt; $test$statistic</span></span>
+<span id="cb10-46"><a href="#cb10-46" tabindex="-1"></a><span class="co">#&gt; [1] 33.07199</span></span>
+<span id="cb10-47"><a href="#cb10-47" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-48"><a href="#cb10-48" tabindex="-1"></a><span class="co">#&gt; $test$df</span></span>
+<span id="cb10-49"><a href="#cb10-49" tabindex="-1"></a><span class="co">#&gt; [1] 52</span></span>
+<span id="cb10-50"><a href="#cb10-50" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-51"><a href="#cb10-51" tabindex="-1"></a><span class="co">#&gt; $test$p_value</span></span>
+<span id="cb10-52"><a href="#cb10-52" tabindex="-1"></a><span class="co">#&gt; [1] 0.9811565</span></span></code></pre></div>
+<p><strong>Reference:</strong> Ghosh, I., Marques, F., &amp;
+Chakraborty, S. (2025). <em>A form of bivariate binomial conditionals
+distributions</em>. Communications in Statistics - Theory and Methods,
+54(2), 534–553.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

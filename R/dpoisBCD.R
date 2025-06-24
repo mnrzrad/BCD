@@ -15,8 +15,7 @@
 #' \deqn{
 #' P(X = x, Y = y) = K(\lambda_1, \lambda_2, \lambda_3) \frac{\lambda_1^x \lambda_2^y \lambda_3^{xy}}{x! y!},
 #' }
-#' where \eqn{ x, y = 0, 1, 2, \ldots }, and \eqn{ K(\lambda_1, \lambda_2, \lambda_3) } is the normalizing
-#' constant computed by the function \code{normalize_constant_BPCD}.
+#' where \eqn{ x, y = 0, 1, 2, \ldots }, and \eqn{ K(\lambda_1, \lambda_2, \lambda_3) } is the normalizing constant computed by the function \code{normalize_constant_BPCD}.
 #'
 #' Key properties of the BPCD include:
 #'

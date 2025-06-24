@@ -18,3 +18,5 @@ Depends:
     R (>= 3.5)
 Imports:
   stats
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr

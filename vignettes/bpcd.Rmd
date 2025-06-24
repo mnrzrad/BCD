@@ -1,0 +1,120 @@
+---
+title: "The Bivariate Poisson Conditionals Distribution (BPCD)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The Bivariate Poisson Conditionals Distribution (BPCD)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(BCD)
+```
+
+# Introduction
+
+This vignette introduces the Bivariate Poisson Conditionals Distribution (BPCD), defined via conditional specifications, as proposed by  Ghosh, Marques, and Chakraborty (2021). The `BCD` package provides functions to evaluate the joint and cumulative distributions, perform random sampling, and estimate parameters via maximum likelihood.
+
+# Joint Probability: `dpoisBCD()`
+
+The joint probability mass function (p.m.f.) of the BBCD is given by:
+
+\[
+P(X = x, Y = y) = K \frac{\lambda_1^x \lambda_2^y \lambda_3^{xy}}{x! y!},
+\]
+
+where \( K \) is a normalizing constant ensuring the probabilities sum to 1 and 
+\eqn{ x, y = 0, 1, 2, \ldots }.
+
+## Example
+
+```{r}
+dpoisBCD(x = 1, y = 2, lambda1 = 0.5, lambda2 =  0.5, lambda3 =  0.5)
+dpoisBCD(x = 0, y = 1, lambda1 = 0.5, lambda2 =  0.5, lambda3 =  1)
+```
+
+# Cumulative Distribution: `ppoisBCD()`
+
+The function `ppoisBCD()` computes the cumulative distribution:
+
+\[
+P(X \leq x, Y \leq y)
+\]
+
+## Example
+
+```{r}
+ppoisBCD(x = 1, y = 1, lambda1 = 0.5, lambda2 = 0.5, lambda3 = 0.5)
+ppoisBCD(x = 2, y = 2, lambda1 = 1.0, lambda2 = 1.0, lambda3 = 0.8)
+```
+
+# Random Sampling: `rpoisBCD()`
+
+Generate samples from the BPCD using:
+
+```r
+rpoisBCD(n, lambda1, lambda2, lambda3)
+```
+
+## Example
+
+```{r}
+set.seed(123)
+samples <- rpoisBCD(n = 100, lambda1 = 0.5, lambda2 = 0.5, lambda3 = 0.5)
+head(samples)
+cor(samples$X, samples$Y) # Should be negative
+```
+
+# Maximum Likelihood Estimation: `MLEpoisBCD()`
+
+Estimate the parameters of the distribution from data.
+
+## Example
+
+```{r}
+data <- rpoisBCD(n = 100, lambda1 = 0.5, lambda2 = 0.5, lambda3 = 0.5)
+fit <- MLEpoisBCD(data)
+fit
+```
+
+
+# Real Data Example 
+The dataset `lensfaults` records counts of surface faults $X$ and interior faults $Y$ observed in 100 optical lenses.
+
+```{r}
+data(lensfaults)
+head(lensfaults)
+plot(lensfaults$X, lensfaults$Y, xlab = "X", ylab = "Y")
+```
+
+```{r}
+fit <- MLEpoisBCD(lensfaults)
+FTtest(lensfaults, "BPCD", params = fit, num_params = 3)
+```
+
+The dataset `eplSeasonGoals` is a list of data frames for five consecutive seasons (2014/15 to 2018/19) from the English Premier League. Each data frame contains the
+number of full-time home ($X$) and away ($Y$) goals scored in each match of the 
+season.
+
+```{r}
+data(eplSeasonGoals)
+plot(eplSeasonGoals[["1415"]]$X, eplSeasonGoals[["1415"]]$Y, xlab = "X", ylab = "Y")
+plot(eplSeasonGoals[["2425"]]$X, eplSeasonGoals[["2425"]]$Y, xlab = "X", ylab = "Y")
+```
+
+```{r}
+fit <- MLEpoisBCD(eplSeasonGoals[["1415"]])
+FTtest(eplSeasonGoals[["1415"]], "BPCD", params = fit, num_params = 3)
+```
+
+```{r}
+fit <- MLEpoisBCD(eplSeasonGoals[["2425"]])
+FTtest(eplSeasonGoals[["2425"]], "BPCD", params = fit, num_params = 3)
+```
+
+**Reference:**
+Ghosh, I., Marques, F., and Chakraborty, S. (2021). A new bivariate Poisson distribution via conditional specification: properties and applications. \emph{Journal of Applied Statistics}, 48(16), 3025-3047.
