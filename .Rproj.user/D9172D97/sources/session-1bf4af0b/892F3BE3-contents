@@ -1,8 +1,0 @@
-
-
-
-
-true_params <- list(n1 = 2, n2 = 3, p1 = 0.6, p2 = 0.4, lambda = 0.2)
-data <- rbinomBCD(n = 1000,n1 = true_params$n1, n2 = true_params$n2, p1 = true_params$p1, p2 = true_params$p2, lambda = true_params$lambda)
-MLEbinomBCD(data)
-pbinomBCD(x = 3, y = 5, n1 = 3, n2 = 5data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAbElEQVR4Xs2RQQrAMAgEfZgf7W9LAguybljJpR3wEse5JOL3ZObDb4x1loDhHbBOFU6i2Ddnw2KNiXcdAXygJlwE8OFVBHDgKrLgSInN4WMe9iXiqIVsTMjH7z/GhNTEibOxQswcYIWYOR/zAjBJfiXh3jZ6AAAAAElFTkSuQmCC, p1 = 0.5, p2 = 0.4, lambda = 0.2)
