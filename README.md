@@ -41,7 +41,7 @@ A BibTeX entry for LaTeX users is
 
 @Manual{BCD, 
 title = {BCD: Bivariate Distributions via Conditional Specification},
-author = {Mina Norouzirad and Filipe J. Marques and Indranil Shosh},
+author = {Mina Norouzirad and Filipe J. Marques and Indranil Ghosh},
 year = {2025}, 
 note = {R package version 0.1.1},
 url = {<https://cran.r-project.org/package=BCD>} }
