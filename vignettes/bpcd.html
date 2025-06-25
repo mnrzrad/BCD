@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>The Bivariate Poisson Conditionals Distribution (BPCD)</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">The Bivariate Poisson Conditionals
+Distribution (BPCD)</h1>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>This vignette introduces the Bivariate Poisson Conditionals
+Distribution (BPCD), defined via conditional specifications, as proposed
+by Ghosh, Marques, and Chakraborty (2021). The <code>BCD</code> package
+provides functions to evaluate the joint and cumulative distributions,
+perform random sampling, and estimate parameters via maximum
+likelihood.</p>
+</div>
+<div id="joint-probability-dpoisbcd" class="section level1">
+<h1>Joint Probability: <code>dpoisBCD()</code></h1>
+<p>The joint probability mass function (p.m.f.) of the BBCD is given
+by:</p>
+<p><span class="math display">\[
+P(X = x, Y = y) = K \frac{\lambda_1^x \lambda_2^y \lambda_3^{xy}}{x!
+y!},
+\]</span></p>
+<p>where <span class="math inline">\(K\)</span> is a normalizing
+constant ensuring the probabilities sum to 1 and .</p>
+<div id="example" class="section level2">
+<h2>Example</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">dpoisBCD</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">lambda1 =</span> <span class="fl">0.5</span>, <span class="at">lambda2 =</span>  <span class="fl">0.5</span>, <span class="at">lambda3 =</span>  <span class="fl">0.5</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="co">#&gt; [1] 0.006358011</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">dpoisBCD</span>(<span class="at">x =</span> <span class="dv">0</span>, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">lambda1 =</span> <span class="fl">0.5</span>, <span class="at">lambda2 =</span>  <span class="fl">0.5</span>, <span class="at">lambda3 =</span>  <span class="dv">1</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; [1] 0.1839397</span></span></code></pre></div>
+</div>
+</div>
+<div id="cumulative-distribution-ppoisbcd" class="section level1">
+<h1>Cumulative Distribution: <code>ppoisBCD()</code></h1>
+<p>The function <code>ppoisBCD()</code> computes the cumulative
+distribution:</p>
+<p><span class="math display">\[
+P(X \leq x, Y \leq y)
+\]</span></p>
+<div id="example-1" class="section level2">
+<h2>Example</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">ppoisBCD</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">1</span>, <span class="at">lambda1 =</span> <span class="fl">0.5</span>, <span class="at">lambda2 =</span> <span class="fl">0.5</span>, <span class="at">lambda3 =</span> <span class="fl">0.5</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; [1] 0.8646896</span></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">ppoisBCD</span>(<span class="at">x =</span> <span class="dv">2</span>, <span class="at">y =</span> <span class="dv">2</span>, <span class="at">lambda1 =</span> <span class="fl">1.0</span>, <span class="at">lambda2 =</span> <span class="fl">1.0</span>, <span class="at">lambda3 =</span> <span class="fl">0.8</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; [1] 0.8872704</span></span></code></pre></div>
+</div>
+</div>
+<div id="random-sampling-rpoisbcd" class="section level1">
+<h1>Random Sampling: <code>rpoisBCD()</code></h1>
+<p>Generate samples from the BPCD using:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">rpoisBCD</span>(n, lambda1, lambda2, lambda3)</span></code></pre></div>
+<div id="example-2" class="section level2">
+<h2>Example</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">rpoisBCD</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">lambda1 =</span> <span class="fl">0.5</span>, <span class="at">lambda2 =</span> <span class="fl">0.5</span>, <span class="at">lambda3 =</span> <span class="fl">0.5</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">head</span>(samples)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt;   X Y</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; 1 0 1</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; 2 1 2</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; 3 0 1</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; 4 0 2</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; 5 1 0</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; 6 1 0</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="fu">cor</span>(samples<span class="sc">$</span>X, samples<span class="sc">$</span>Y) <span class="co"># Should be negative</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; [1] -0.2450123</span></span></code></pre></div>
+</div>
+</div>
+<div id="maximum-likelihood-estimation-mlepoisbcd" class="section level1">
+<h1>Maximum Likelihood Estimation: <code>MLEpoisBCD()</code></h1>
+<p>Estimate the parameters of the distribution from data.</p>
+<div id="example-3" class="section level2">
+<h2>Example</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">rpoisBCD</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">lambda1 =</span> <span class="fl">0.5</span>, <span class="at">lambda2 =</span> <span class="fl">0.5</span>, <span class="at">lambda3 =</span> <span class="fl">0.5</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">MLEpoisBCD</span>(data)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>fit</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co">#&gt; $lambda1</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="co">#&gt; [1] 0.5252073</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt; $lambda2</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; [1] 0.5058323</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; $lambda3</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; [1] 0.431483</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; $logLik</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; [1] -162.3016</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; $AIC</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; [1] 330.6032</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; $BIC</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; [1] 338.4187</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; $convergence</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; attr(,&quot;class&quot;)</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt; [1] &quot;MLEpoisBCD&quot;</span></span></code></pre></div>
+</div>
+</div>
+<div id="real-data-example" class="section level1">
+<h1>Real Data Example</h1>
+<p>The dataset <code>lensfaults</code> records counts of surface faults
+<span class="math inline">\(X\)</span> and interior faults <span class="math inline">\(Y\)</span> observed in 100 optical lenses.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">data</span>(lensfaults)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">head</span>(lensfaults)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt;   X Y</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt; 1 0 0</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt; 2 0 1</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; 3 0 2</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; 4 0 2</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt; 5 0 2</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; 6 0 2</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="fu">plot</span>(lensfaults<span class="sc">$</span>X, lensfaults<span class="sc">$</span>Y, <span class="at">xlab =</span> <span class="st">&quot;X&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Y&quot;</span>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">MLEpoisBCD</span>(lensfaults)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">FTtest</span>(lensfaults, <span class="st">&quot;BPCD&quot;</span>, <span class="at">params =</span> fit, <span class="at">num_params =</span> <span class="dv">3</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; $observed</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt;    0 1 2 3 4 5 6 7 8 9 10 11 12 13 14</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt; 0  1 1 4 0 0 0 0 0 0 0  0  0  0  0  1</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt; 1  3 2 6 2 5 2 0 0 0 0  0  0  0  0  0</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt; 2  1 2 4 3 2 1 1 1 0 0  1  0  0  0  0</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt; 3  0 5 1 2 3 2 0 0 0 0  0  0  0  0  0</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt; 4  0 1 2 5 3 1 1 0 0 0  0  0  0  0  0</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt; 5  0 1 2 1 2 1 0 0 0 0  1  0  0  0  0</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt; 6  0 0 2 0 1 1 0 0 0 0  0  0  1  0  0</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt; 7  0 1 0 1 1 0 0 0 0 0  0  0  0  0  0</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt; 8  0 0 2 0 0 0 0 0 0 0  0  0  0  0  0</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt; 9  0 0 0 0 0 0 0 0 0 0  0  0  0  0  0</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt; 10 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; 11 0 1 0 0 0 0 0 0 0 0  0  0  0  0  0</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt; 12 0 1 0 0 0 0 0 0 0 0  0  0  0  0  0</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a><span class="co">#&gt; $expected</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt;              0            1           2           3           4            5</span></span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co">#&gt; 0  0.186393251 0.5780419270 0.896310534 0.926544756 0.718349125 0.4455482262</span></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#&gt; 1  0.571730986 1.7730496060 2.749286800 2.842025357 2.203419118 1.3666467257</span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co">#&gt; 2  0.876845910 2.7192706605 4.216495076 4.358725296 3.379314905 2.0959832888</span></span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a><span class="co">#&gt; 3  0.896527410 2.7803068416 4.311137643 4.456560333 3.455166301 2.1430292918</span></span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a><span class="co">#&gt; 4  0.687488008 2.1320347711 3.305928403 3.417443517 2.649540182 1.6433484596</span></span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a><span class="co">#&gt; 5  0.421751532 1.3079339869 2.028079549 2.096490444 1.625406724 1.0081408295</span></span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a><span class="co">#&gt; 6  0.215609039 0.6686457999 1.036800699 1.071773915 0.830945132 0.5153846739</span></span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#&gt; 7  0.094477952 0.2929946074 0.454316791 0.469641741 0.364112723 0.2258369531</span></span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a><span class="co">#&gt; 8  0.036224469 0.1123391637 0.174192859 0.180068708 0.139607070 0.0865897658</span></span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt; 9  0.012345852 0.0382869017 0.059367585 0.061370164 0.047580220 0.0295111139</span></span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="co">#&gt; 10 0.003786889 0.0117438844 0.018210041 0.018824300 0.014594459 0.0090520543</span></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="co">#&gt; 11 0.001055970 0.0032747687 0.005077849 0.005249134 0.004069648 0.0025241549</span></span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a><span class="co">#&gt; 12 0.000269918 0.0008370684 0.001297956 0.001341739 0.001040249 0.0006452029</span></span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a><span class="co">#&gt;               6            7            8            9           10</span></span>
+<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a><span class="co">#&gt; 0  0.2302886982 0.1020243276 3.954967e-02 1.362792e-02 4.226284e-03</span></span>
+<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a><span class="co">#&gt; 1  0.7063731307 0.3129430329 1.213122e-01 4.180143e-02 1.296344e-02</span></span>
+<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a><span class="co">#&gt; 2  1.0833423516 0.4799509302 1.860527e-01 6.410954e-02 1.988162e-02</span></span>
+<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a><span class="co">#&gt; 3  1.1076588276 0.4907238085 1.902288e-01 6.554853e-02 2.032788e-02</span></span>
+<span id="cb7-39"><a href="#cb7-39" tabindex="-1"></a><span class="co">#&gt; 4  0.8493908297 0.3763038694 1.458740e-01 5.026486e-02 1.558812e-02</span></span>
+<span id="cb7-40"><a href="#cb7-40" tabindex="-1"></a><span class="co">#&gt; 5  0.5210736473 0.2308501845 8.948895e-02 3.083586e-02 9.562803e-03</span></span>
+<span id="cb7-41"><a href="#cb7-41" tabindex="-1"></a><span class="co">#&gt; 6  0.2663847787 0.1180158997 4.574880e-02 1.576400e-02 4.888724e-03</span></span>
+<span id="cb7-42"><a href="#cb7-42" tabindex="-1"></a><span class="co">#&gt; 7  0.1167274268 0.0517135114 2.004671e-02 6.907642e-03 2.142195e-03</span></span>
+<span id="cb7-43"><a href="#cb7-43" tabindex="-1"></a><span class="co">#&gt; 8  0.0447552998 0.0198278483 7.686254e-03 2.648509e-03 8.213543e-04</span></span>
+<span id="cb7-44"><a href="#cb7-44" tabindex="-1"></a><span class="co">#&gt; 9  0.0152532893 0.0067576333 2.619593e-03 9.026522e-04 2.799301e-04</span></span>
+<span id="cb7-45"><a href="#cb7-45" tabindex="-1"></a><span class="co">#&gt; 10 0.0046786984 0.0020727941 8.035175e-04 2.768739e-04 8.586401e-05</span></span>
+<span id="cb7-46"><a href="#cb7-46" tabindex="-1"></a><span class="co">#&gt; 11 0.0013046497 0.0005779963 2.240599e-04 7.720596e-05 2.394308e-05</span></span>
+<span id="cb7-47"><a href="#cb7-47" tabindex="-1"></a><span class="co">#&gt; 12 0.0003334834 0.0001477425 5.727228e-05 1.973473e-05 6.120125e-06</span></span>
+<span id="cb7-48"><a href="#cb7-48" tabindex="-1"></a><span class="co">#&gt;              11           12           13           14</span></span>
+<span id="cb7-49"><a href="#cb7-49" tabindex="-1"></a><span class="co">#&gt; 0  1.191503e-03 3.079237e-04 7.345627e-05 1.627159e-05</span></span>
+<span id="cb7-50"><a href="#cb7-50" tabindex="-1"></a><span class="co">#&gt; 1  3.654742e-03 9.445058e-04 2.253152e-04 4.991046e-05</span></span>
+<span id="cb7-51"><a href="#cb7-51" tabindex="-1"></a><span class="co">#&gt; 2  5.605163e-03 1.448559e-03 3.455588e-04 7.654611e-05</span></span>
+<span id="cb7-52"><a href="#cb7-52" tabindex="-1"></a><span class="co">#&gt; 3  5.730976e-03 1.481073e-03 3.533152e-04 7.826425e-05</span></span>
+<span id="cb7-53"><a href="#cb7-53" tabindex="-1"></a><span class="co">#&gt; 4  4.394709e-03 1.135738e-03 2.709342e-04 6.001571e-05</span></span>
+<span id="cb7-54"><a href="#cb7-54" tabindex="-1"></a><span class="co">#&gt; 5  2.696011e-03 6.967381e-04 1.662093e-04 3.681769e-05</span></span>
+<span id="cb7-55"><a href="#cb7-55" tabindex="-1"></a><span class="co">#&gt; 6  1.378263e-03 3.561885e-04 8.497001e-05 1.882204e-05</span></span>
+<span id="cb7-56"><a href="#cb7-56" tabindex="-1"></a><span class="co">#&gt; 7  6.039423e-04 1.560786e-04 3.723310e-05 8.247652e-06</span></span>
+<span id="cb7-57"><a href="#cb7-57" tabindex="-1"></a><span class="co">#&gt; 8  2.315619e-04 5.984322e-05 1.427581e-05 3.162291e-06</span></span>
+<span id="cb7-58"><a href="#cb7-58" tabindex="-1"></a><span class="co">#&gt; 9  7.891982e-05 2.039548e-05 4.865414e-06 1.077757e-06</span></span>
+<span id="cb7-59"><a href="#cb7-59" tabindex="-1"></a><span class="co">#&gt; 10 2.420737e-05 6.255982e-06 1.492387e-06 3.305845e-07</span></span>
+<span id="cb7-60"><a href="#cb7-60" tabindex="-1"></a><span class="co">#&gt; 11 6.750197e-06 1.744474e-06 4.161503e-07 9.218310e-08</span></span>
+<span id="cb7-61"><a href="#cb7-61" tabindex="-1"></a><span class="co">#&gt; 12 1.725428e-06 4.459074e-07 1.063728e-07 2.356306e-08</span></span>
+<span id="cb7-62"><a href="#cb7-62" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-63"><a href="#cb7-63" tabindex="-1"></a><span class="co">#&gt; $test</span></span>
+<span id="cb7-64"><a href="#cb7-64" tabindex="-1"></a><span class="co">#&gt; $test$statistic</span></span>
+<span id="cb7-65"><a href="#cb7-65" tabindex="-1"></a><span class="co">#&gt; [1] 112.0946</span></span>
+<span id="cb7-66"><a href="#cb7-66" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-67"><a href="#cb7-67" tabindex="-1"></a><span class="co">#&gt; $test$df</span></span>
+<span id="cb7-68"><a href="#cb7-68" tabindex="-1"></a><span class="co">#&gt; [1] 191</span></span>
+<span id="cb7-69"><a href="#cb7-69" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-70"><a href="#cb7-70" tabindex="-1"></a><span class="co">#&gt; $test$p_value</span></span>
+<span id="cb7-71"><a href="#cb7-71" tabindex="-1"></a><span class="co">#&gt; [1] 0.999999</span></span></code></pre></div>
+<p>The dataset <code>eplSeasonGoals</code> is a list of data frames for
+five consecutive seasons (2014/15 to 2018/19) from the English Premier
+League. Each data frame contains the number of full-time home (<span class="math inline">\(X\)</span>) and away (<span class="math inline">\(Y\)</span>) goals scored in each match of the
+season.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">data</span>(eplSeasonGoals)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">plot</span>(eplSeasonGoals[[<span class="st">&quot;1415&quot;</span>]]<span class="sc">$</span>X, eplSeasonGoals[[<span class="st">&quot;1415&quot;</span>]]<span class="sc">$</span>Y, <span class="at">xlab =</span> <span class="st">&quot;X&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Y&quot;</span>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">plot</span>(eplSeasonGoals[[<span class="st">&quot;2425&quot;</span>]]<span class="sc">$</span>X, eplSeasonGoals[[<span class="st">&quot;2425&quot;</span>]]<span class="sc">$</span>Y, <span class="at">xlab =</span> <span class="st">&quot;X&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Y&quot;</span>)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">MLEpoisBCD</span>(eplSeasonGoals[[<span class="st">&quot;1415&quot;</span>]])</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="fu">FTtest</span>(eplSeasonGoals[[<span class="st">&quot;1415&quot;</span>]], <span class="st">&quot;BPCD&quot;</span>, <span class="at">params =</span> fit, <span class="at">num_params =</span> <span class="dv">3</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt; $observed</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt;    0  1  2  3 4 5 6</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; 0 31 40 14  5 1 1 0</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; 1 37 37 26 15 4 0 0</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt; 2 37 35 22  6 2 0 0</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt; 3 19 14  9  3 0 0 1</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; 4  4  5  2  1 0 0 0</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt; 5  2  1  0  2 0 0 0</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt; 6  1  2  0  0 0 0 0</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt; 7  0  0  0  0 0 0 0</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt; 8  1  0  0  0 0 0 0</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt; $expected</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt;             0           1            2           3            4            5</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt; 0 28.03424236 31.78629927 18.020262649 6.810688324 1.9305549127 0.4377874416</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt; 1 42.47791655 46.93740825 25.932537095 9.551677511 2.6386121498 0.5831247187</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co">#&gt; 2 32.18159725 34.65518704 18.659452787 6.697894466 1.8031794982 0.3883556325</span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co">#&gt; 3 16.25401755 17.05792223  8.950793541 3.131163102 0.8215066906 0.1724274899</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co">#&gt; 4  6.15708454  6.29716795  3.220219234 1.097828104 0.2807013570 0.0574175513</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="co">#&gt; 5  1.86586190  1.85974932  0.926828386 0.307930697 0.0767304785 0.0152958218</span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co">#&gt; 6  0.47119712  0.45770146  0.222296163 0.071976443 0.0174787373 0.0033956250</span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt; 7  0.10199502  0.09655247  0.045700170 0.014420522 0.0034127574 0.0006461299</span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt; 8  0.01931805  0.01782184  0.008220755 0.002528015 0.0005830541 0.0001075791</span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt;              6</span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt; 0 8.273003e-02</span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt; 1 1.073906e-01</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt; 2 6.970100e-02</span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; 3 3.015926e-02</span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co">#&gt; 4 9.787315e-03</span></span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co">#&gt; 5 2.540952e-03</span></span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="co">#&gt; 6 5.497283e-04</span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="co">#&gt; 7 1.019420e-04</span></span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="co">#&gt; 8 1.654116e-05</span></span>
+<span id="cb10-36"><a href="#cb10-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-37"><a href="#cb10-37" tabindex="-1"></a><span class="co">#&gt; $test</span></span>
+<span id="cb10-38"><a href="#cb10-38" tabindex="-1"></a><span class="co">#&gt; $test$statistic</span></span>
+<span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="co">#&gt; [1] 43.69272</span></span>
+<span id="cb10-40"><a href="#cb10-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-41"><a href="#cb10-41" tabindex="-1"></a><span class="co">#&gt; $test$df</span></span>
+<span id="cb10-42"><a href="#cb10-42" tabindex="-1"></a><span class="co">#&gt; [1] 59</span></span>
+<span id="cb10-43"><a href="#cb10-43" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb10-44"><a href="#cb10-44" tabindex="-1"></a><span class="co">#&gt; $test$p_value</span></span>
+<span id="cb10-45"><a href="#cb10-45" tabindex="-1"></a><span class="co">#&gt; [1] 0.9319867</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">MLEpoisBCD</span>(eplSeasonGoals[[<span class="st">&quot;2425&quot;</span>]])</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="fu">FTtest</span>(eplSeasonGoals[[<span class="st">&quot;2425&quot;</span>]], <span class="st">&quot;BPCD&quot;</span>, <span class="at">params =</span> fit, <span class="at">num_params =</span> <span class="dv">3</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a><span class="co">#&gt; $observed</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="co">#&gt;    0  1  2  3 4 5 6</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt; 0 16 26 28 12 5 3 1</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt; 1 29 45 29 11 4 2 0</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt; 2 21 33 31  5 2 1 1</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co">#&gt; 3 11 17 11  1 1 0 1</span></span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt; 4  7 10  6  3 0 0 0</span></span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt; 5  2  2  1  1 0 0 0</span></span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt; 6  0  0  0  0 0 0 0</span></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt; 7  1  0  0  0 0 0 0</span></span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt; $expected</span></span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt;            0          1           2           3           4            5</span></span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="co">#&gt; 0 16.3518431 26.9702903 22.24203583 12.22847193 5.042328193 1.6633361060</span></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="co">#&gt; 1 28.4590851 42.3127044 31.45506869 15.58903503 5.794408264 1.7230145191</span></span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="co">#&gt; 2 24.7653894 33.1914290 22.24214893  9.93656504 3.329331793 0.8924170594</span></span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="co">#&gt; 3 14.3673982 17.3576072 10.48507621  4.22242619 1.275304246 0.3081452880</span></span>
+<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="co">#&gt; 4  6.2513290  6.8079292  3.70704367  1.34570268 0.366380032 0.0798002886</span></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co">#&gt; 5  2.1759884  2.1361423  1.04851295  0.34310430 0.084205367 0.0165326846</span></span>
+<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a><span class="co">#&gt; 6  0.6311892  0.5585526  0.24713750  0.07289906 0.016127480 0.0028543094</span></span>
+<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a><span class="co">#&gt; 7  0.1569335  0.1251847  0.04992944  0.01327611 0.002647564 0.0004223884</span></span>
+<span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="co">#&gt;              6</span></span>
+<span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a><span class="co">#&gt; 0 0.4572436409</span></span>
+<span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a><span class="co">#&gt; 1 0.4269603409</span></span>
+<span id="cb11-27"><a href="#cb11-27" tabindex="-1"></a><span class="co">#&gt; 2 0.1993413537</span></span>
+<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a><span class="co">#&gt; 3 0.0620463175</span></span>
+<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a><span class="co">#&gt; 4 0.0144842456</span></span>
+<span id="cb11-30"><a href="#cb11-30" tabindex="-1"></a><span class="co">#&gt; 5 0.0027049905</span></span>
+<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a><span class="co">#&gt; 6 0.0004209731</span></span>
+<span id="cb11-32"><a href="#cb11-32" tabindex="-1"></a><span class="co">#&gt; 7 0.0000561560</span></span>
+<span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a><span class="co">#&gt; $test</span></span>
+<span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a><span class="co">#&gt; $test$statistic</span></span>
+<span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a><span class="co">#&gt; [1] 39.71118</span></span>
+<span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a><span class="co">#&gt; $test$df</span></span>
+<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="co">#&gt; [1] 52</span></span>
+<span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a><span class="co">#&gt; $test$p_value</span></span>
+<span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a><span class="co">#&gt; [1] 0.8941378</span></span></code></pre></div>
+<p><strong>Reference:</strong> Ghosh, I., Marques, F., and Chakraborty,
+S. (2021). A new bivariate Poisson distribution via conditional
+specification: properties and applications. , 48(16), 3025-3047.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

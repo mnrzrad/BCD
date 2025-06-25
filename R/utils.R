@@ -44,6 +44,7 @@ normalize_constant_BPCD <- function(lam1,lam2,lam3, max_iter = 10000) {
 }
 
 create_observed_table <- function(data, min_x = NULL, min_y = NULL) {
+  data <- as.data.frame(data)
   X <- data[,1]
   Y <- data[,2]
   if (is.null(min_x)) min_x <- min(X)
@@ -66,6 +67,7 @@ create_expected_table <- function(data = NULL,
                                   params,
                                   min_x = NULL, max_x = NULL,
                                   min_y = NULL, max_y = NULL) {
+  data <- as.data.frame(data)
   if (!is.null(data) && (is.null(min_x) || is.null(max_x) || is.null(min_y) || is.null(max_y))) {
     X <- data[,1]
     Y <- data[,2]

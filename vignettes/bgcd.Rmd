@@ -1,0 +1,113 @@
+---
+title: "The Bivariate Geometric Conditionals Distribution (BGCD)"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The Bivariate Geometric Conditionals Distribution (BGCD)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(BCD)
+```
+
+# Introduction
+
+This vignette introduces the Bivariate Geometric Conditionals Distribution (BGCD), defined via conditional specifications, as proposed by Ghosh, Marques, and Chakraborty (2023). The `BCD` package provides functions to evaluate the joint and cumulative distributions, perform random sampling, and estimate parameters via maximum likelihood.
+
+# Joint Probability: `dgeomBCD()`
+
+The joint probability mass function (p.m.f.) of the BBCD is given by:
+
+\[
+P(X = x, Y = y) = K q_1^x q_2^y q_3^{xy},
+\]
+
+where \( K \) is a normalizing constant ensuring the probabilities sum to 1 and 
+\eqn{ x, y = 0, 1, 2, \ldots }.
+
+Note that: $q_3 < 1$indicates the negative correlation between $X$ and $Y$, while
+$q_3 = 1$ indicates the independence between $X$ and $Y$.
+
+## Example
+
+```{r}
+dgeomBCD(x = 1, y = 2, q1 = 0.5, q2 = 0.6, q3 = 0.8)
+dgeomBCD(x = 0, y = 4, q1 = 0.5, q2 = 0.6, q3 = 0.8)
+```
+
+# Cumulative Distribution: `pgeomBCD()`
+
+The function `pgeomBCD()` computes the cumulative distribution:
+
+\[
+P(X \leq x, Y \leq y)
+\]
+
+## Example
+
+```{r}
+pgeomBCD(x = 1, y = 2, q1 = 0.5, q2 = 0.6, q3 = 0.8)
+pgeomBCD(x = 0, y = 0, q1 = 0.4, q2 = 0.3, q3 = 0.9)
+```
+
+# Random Sampling: `rpoisBCD()`
+
+Generate samples from the BPCD using:
+
+```r
+rgeomBCD(n, q1, q2, q3)
+```
+
+## Example
+
+```{r}
+set.seed(123)
+samples <- rgeomBCD(n = 100, q1 = 0.5, q2 = 0.5, q3 = 0.1)
+head(samples)
+cor(samples$X, samples$Y)  # Should be negative
+```
+
+# Maximum Likelihood Estimation: `MLEgeomBCD()`
+
+Estimate the parameters of the distribution from data.
+
+## Example
+
+```{r}
+samples <- rgeomBCD(n = 50, q1 = 0.2, q2 = 0.2, q3 = 0.5)
+result <-MLEgeomBCD(samples)
+print(result)
+```
+
+For better estimation accuracy and stability, consider increasing the sample size (n = 1000)
+
+```{r}
+samples <- rgeomBCD(n = 1000, q1 = 0.2, q2 = 0.2, q3 = 0.5)
+result <-MLEgeomBCD(samples)
+print(result)
+```
+
+# Real Data Example 
+The dataset `abortflights` records the number of aborted flights by 109 aircrafts 
+during two consecutive periods. The counts are cross-tabulated by the number of 
+aborted flights in each period.
+
+```{r}
+data(abortflights)
+head(abortflights)
+table(abortflights$X, abortflights$Y)
+```
+
+```{r}
+fit <- MLEgeomBCD(abortflights)
+FTtest(abortflights, "BGCD", params = fit, num_params = 3)
+```
+
+
+**Reference:**
+Ghosh, I., Marques, F., & Chakraborty, S.(2023) A bivariate geometric distribution via conditional specification: properties and applications, Communications in Statistics - Simulation and Computation, 52:12, 5925--5945.

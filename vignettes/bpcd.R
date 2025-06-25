@@ -38,3 +38,11 @@ data(eplSeasonGoals)
 plot(eplSeasonGoals[["1415"]]$X, eplSeasonGoals[["1415"]]$Y, xlab = "X", ylab = "Y")
 plot(eplSeasonGoals[["2425"]]$X, eplSeasonGoals[["2425"]]$Y, xlab = "X", ylab = "Y")
 
+## -----------------------------------------------------------------------------
+fit <- MLEpoisBCD(eplSeasonGoals[["1415"]])
+FTtest(eplSeasonGoals[["1415"]], "BPCD", params = fit, num_params = 3)
+
+## -----------------------------------------------------------------------------
+fit <- MLEpoisBCD(eplSeasonGoals[["2425"]])
+FTtest(eplSeasonGoals[["2425"]], "BPCD", params = fit, num_params = 3)
+
