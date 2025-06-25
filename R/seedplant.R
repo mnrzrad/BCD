@@ -8,7 +8,7 @@
 #'   \item{Y}{Number of plants grown.}
 #' }
 #'
-#'#' @references
+#' @references
 #' Lakshminarayana, J., S. N. N. Pandit, and K. Srinivasa Rao. 1999. On a bivariate poisson distribution.\emph{ Communications in Statistics - Theory and Methods}, 28 (2), 267--276. \doi{10.1080/03610929908832297}
 #'
 #' Ghosh, I., Marques, F., & Chakraborty, S. (2025). A form of bivariate binomial conditionals distributions. \emph{Communications in Statistics - Theory and Methods}, 54(2), 534--553. \doi{10.1080/03610926.2024.2315294}
