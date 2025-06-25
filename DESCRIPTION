@@ -20,3 +20,5 @@ Imports:
   stats
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
+URL: https://github.com/mnrzrad/BCD
+BugReports: https://github.com/mnrzrad/BCD/issues
