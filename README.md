@@ -34,7 +34,7 @@ remotes::install_github("mnrzrad/BCD")
 
 ## To cite package `BCD` in publications use:
 
-Norouzirad, M., Marques, F. J., Ghosh, I. (2025) *BCD: Bivariate Distributions via Conditional Specification*. R package version 0.1.0,
+Norouzirad, M., Marques, F. J., Ghosh, I. (2025) *BCD: Bivariate Distributions via Conditional Specification*. R package version 0.1.1,
 <https://cran.r-project.org/package=BCD>.
 
 A BibTeX entry for LaTeX users is
@@ -43,7 +43,7 @@ A BibTeX entry for LaTeX users is
 title = {BCD: Bivariate Distributions via Conditional Specification},
 author = {Mina Norouzirad and Filipe J. Marques and Indranil Shosh},
 year = {2025}, 
-note = {R package version 0.1.0},
+note = {R package version 0.1.1},
 url = {<https://cran.r-project.org/package=BCD>} }
 
 ## License
